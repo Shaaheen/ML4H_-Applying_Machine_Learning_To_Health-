@@ -8,13 +8,26 @@ class Patient:
                 "Night_Sweats", "Other", "Peripheral_neuropathy", "Vomiting",
                 "Weight_loss"]
 
+    temporal_symptoms = ["Cough", "Fever", "Abdominal_pain", "skin_rash",
+                "Lactic_acisdosis", "Lipodystrophy", "Anemia", "Anorexia",
+                "Diarrhea", "Hepatitis", "Jaundice", "Leg_pain",
+                "Night_Sweats", "Other", "Peripheral_neuropathy", "Vomiting",
+                "Weight_loss", "Sex", "Birthdate"]
+
+    sql_symptoms = ["Cough", "Fever", "Abdominal pain", "Skin rash",
+                    "Lactic acidosis", "Lipodystrophy", "Anemia", "Anorexia",
+                    "Cough of any duration", "Diarrhea", "Hepatitis", "Jaundice",
+                    "Leg pain / numbness", "Night sweats", "Peripheral neuropathy", "Vomiting",
+                    "Weight loss / Failure to thrive / malnutrition", "Other symptom"]
+
     def __init__(self, nam):
         self.nam = nam
         self.num_encounters = 0
         self.num_adverse_effects = 0
         self.adverse = "Not Adverse"
         self.secondary = 0
-        self.feature_symptom_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.feature_symptom_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.feature_temporal_sympt_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.cough = 0
         self.fever = 0
         self.abdom = 0
@@ -40,6 +53,7 @@ class Patient:
         self.second_latest_datetime = datetime.datetime(1899, 3, 13, 15, 10, 20)  # placeholder
         self.time_between_symptom_reports = None
         self.continued_symptoms = None
+        self.symptoms_in_prev_month = 0
 
     def __str__(self):
         return str("cough : " + str(self.cough) + " skin rash : " + str(self.rash))
@@ -50,16 +64,13 @@ class Patient:
         return str("cough : " + str(self.cough) + " skin rash : " + str(self.rash))
 
     def set_sympt_class(self):
-        sql_symptoms = ["Cough", "Fever", "Abdominal pain", "Skin rash", "Lactic acidosis", "Lipodystrophy", "Anemia",
-                        "Anorexia", "Cough of any duration", "Diarrhea", "Hepatitis", "Jaundice", "Leg pain / numbness",
-                        "Night sweats", "Peripheral neuropathy", "Vomiting",
-                        "Weight loss / Failure to thrive / malnutrition", "Other symptom"]
-        self.last_symptom_class = sql_symptoms.index(self.last_symptom)
+
+        self.last_symptom_class = Patient.sql_symptoms.index(self.last_symptom)
         # print(self.last_symptom + " : " + str(self.last_symptom_class))
 
     def check_if_null_features(self):
-        for i in self.feature_symptom_array:
-            if i > 0:
+        for i in range( len(self.symptoms) ):
+            if self.feature_symptom_array[i] > 0:
                 return False
         return True
 
