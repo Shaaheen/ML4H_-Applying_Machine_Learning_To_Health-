@@ -12,7 +12,12 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline
 from imblearn.under_sampling import AllKNN
 from imblearn.under_sampling import ClusterCentroids
+from imblearn.under_sampling import CondensedNearestNeighbour
+from imblearn.under_sampling import InstanceHardnessThreshold
 from imblearn.under_sampling import NearMiss
+from imblearn.under_sampling import NeighbourhoodCleaningRule
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.under_sampling import TomekLinks
 from numpy import *
 from sklearn import model_selection
 from sklearn.ensemble import AdaBoostClassifier
@@ -81,7 +86,7 @@ def main():
                                                    int(row[6]),int(row[7]), int(row[8]), int(row[9]),
                                                    int(row[11]), int(row[12]), int(row[13]), int(row[14]),
                                                    int(row[15]),int(row[16]),int(row[17]), int(row[18]),
-                                                   int(row[19]), sex, int(row[21].year) ]
+                                                   int(row[19]), sex, int(row[21].year) , 0]
 
         patients[row[0]].feature_symptom_array = [int(row[2]) + int(row[10]), int(row[3]), int(row[4]), int(row[5]),
                                                          int(row[6]), int(row[7]), int(row[8]), int(row[9]),
@@ -100,12 +105,15 @@ def main():
     cur1 = conn.cursor()
     print("Executing SQL query..")
     #Gets the last reported symptom that a patient reported - RESULT CLASS (Trying to predict this)
-    cur1.execute("select person_id, value_coded_name_id,name, MAX(obs_datetime) from Obs_artvisit_sympt a inner join concept_name n on a.value_coded_name_id = n.concept_name_id where value_coded_name_id IN (524,110,4315,156,3,888,11335,17,30,226,2325,4407,1576,10894,9345,838,4355,11333) Group by person_id")
+    cur1.execute(
+        "select person_id, value_coded_name_id,name, MAX(obs_datetime) from Obs_artvisit_sympt a inner join concept_name n on a.value_coded_name_id = n.concept_name_id where value_coded_name_id IN (524,110,4315,156,3,888,11335,17,2325,4407,10894,9345,838,4355,11333) Group by person_id")
     print("Executed")
     cur1.close()
 
-    #Loads result set - last symptom reported by patient
+    # Loads result set - last symptom reported by patient
     for row in cur1:
+        if row[2] == "None" or row[2] == 'None' or row[2] is None:
+            continue
         if (row[0] not in patient_ids):
             patient_ids.append(row[0])
             patients[row[0]] = (Patient(int(row[0])))
@@ -113,7 +121,7 @@ def main():
             patients[row[0]].last_symptom = "Cough"
         else:
             patients[row[0]].last_symptom = row[2]
-        patients[row[0]].set_sympt_class() #Indexing - Binaryzing classes for ROC scores later on
+        patients[row[0]].set_sympt_class()  # Indexing - Binaryzing classes for ROC scores later on
 
 
     cur2 = conn.cursor()
@@ -122,11 +130,13 @@ def main():
     #NEW RESULT CLASS
     # - checking if patient is likely to continue reporting symptoms in the 40 days
     # Binary result class - True (Have continued reporting symptoms) - False (Have not continued reporting symptoms)
-    cur2.execute("select a.person_id,last_symptom_date,second_last_symptom_date,days_between_last_symptoms,gender,birthdate from patient_last_symptom_dates a inner join person b on a.person_id=b.person_id")
+    cur2.execute("select a.person_id,last_symptom_date,second_last_symptom_date,days_between_last_symptoms,gender,birthdate,last_drug from patient_last_symptom_dates a inner join person b on a.person_id=b.person_id inner join (select person_id, max(obs_datetime), value_drug AS last_drug from Obs_drugs where value_drug IS NOT NULL group by person_id) AS last_drug_table on last_drug_table.person_id=a.person_id")
     print("Executed")
     cur2.close()
     for row in cur2:
         if (row[0] in patient_ids):
+            drug_index = Patient.temporal_symptoms.index("Last Drug")
+            patients[row[0]].feature_temporal_sympt_array[drug_index] = int(row[6])
             if (row[3] == None or int(row[3]) >41) or patients[row[0]].last_symptom == "None":
                 patients[row[0]].continued_symptoms = False
             elif int(row[3]) < 41 and patients[row[0]].last_symptom != "None":
@@ -153,26 +163,23 @@ def main():
     for id in patient_ids:
         if patients[id].check_if_null_features():
             continue
-        ml4hX.append( patients[id].feature_temporal_sympt_array )
-        ml4hY.append(patients[id].last_symptom)
-        ml4hY_multiclass.append(patients[id].last_symptom_class)
-        ml4hY_temporal.append(patients[id].continued_symptoms)
+
+        if patients[id].last_symptom == "None":
+            continue
+
+        if patients[id].continued_symptoms == True or patients[id].continued_symptoms == False:
+
+            ml4hX.append( patients[id].feature_temporal_sympt_array )
+            ml4hY.append(patients[id].last_symptom)
+            ml4hY_multiclass.append(patients[id].last_symptom_class)
+            ml4hY_temporal.append(patients[id].continued_symptoms)
 
     print("Feature set:")
     #print(ml4hX)
     print("Result set:")
     #print(ml4hY)
 
-    sumA =0
-    sumB=0
-    for t in ml4hY_temporal:
-        if t:
-            sumA+=1
-        elif not t:
-            sumB+=1
-
-    print("t: "+str(sumA))
-    print("f: "+str(sumB))
+    check_temporal_symptom_distribution(ml4hY_temporal)
 
     # ada = ADASYN( random_state=40)
     # X_resampled, y_resampled = ada.fit_sample(ml4hX, ml4hY_temporal)
@@ -182,13 +189,49 @@ def main():
     # X_resampled_rand, y_resampled_rand = rand_over.fit_sample(ml4hX,ml4hY_temporal)
     # check_symptom_result_distribution(y_resampled_rand)
     #
+    # print("ALKNN")
     # allknn = AllKNN()
     # X_resampled_allknn, y_resampled_allknn = allknn.fit_sample(ml4hX, ml4hY_temporal)
-    # check_symptom_result_distribution(y_resampled_allknn)
+    # check_temporal_symptom_distribution(y_resampled_allknn)
     #
-    # nearmiss = NearMiss(ratio=0.2)
+    # print("CONDENSCED")
+    # allknn = CondensedNearestNeighbour()
+    # X_resampled_allknn, y_resampled_allknn = allknn.fit_sample(ml4hX, ml4hY_temporal)
+    # check_temporal_symptom_distribution(y_resampled_allknn)
+    #
+    # print("INSTANCE")
+    # allknn = InstanceHardnessThreshold()
+    # X_resampled_allknn, y_resampled_allknn = allknn.fit_sample(ml4hX, ml4hY_temporal)
+    # check_temporal_symptom_distribution(y_resampled_allknn)
+    # # check_symptom_result_distribution(y_resampled_allknn)
+    # #
+    # print("NEARMISS")
+    # nearmiss = NearMiss()
     # X_resampled_nm, y_resampled_nm = nearmiss.fit_sample(ml4hX, ml4hY_temporal)
-    # check_symptom_result_distribution(y_resampled_nm)
+    # check_temporal_symptom_distribution(y_resampled_nm)
+
+    # DATA IS IMBALANCED
+    # Trying to balance data appropriately - Using multiple sampler tools to see which is best
+    samplers = [
+                ['ALLKNN', AllKNN()],
+                ['NearMiss', NearMiss()],
+                #['CondensedNearestNeighbour', CondensedNearestNeighbour()],
+                ['TomekLinks', TomekLinks()],
+                ['NeighbourhoodCleaningRule', NeighbourhoodCleaningRule()],
+                ['InstanceHardnessThreshold', InstanceHardnessThreshold()],
+                ['RandomUnderSampler', RandomUnderSampler()]
+                ]
+
+    for sampler in samplers:
+        print(sampler[0])
+        X_resamp, Y_resamp = sampler[1].fit_sample(ml4hX, ml4hY_temporal)
+        check_temporal_symptom_distribution(Y_resamp)
+
+        apply_machine_learning_techniques(X_resamp, Y_resamp)
+        print("........")
+
+
+    #check_symptom_result_distribution(y_resampled_nm)
 
     # sme = SMOTEENN(random_state=42, k = 3)
     # X_res, y_res = sme.fit_sample(ml4hX, ml4hY_temporal)
@@ -201,7 +244,12 @@ def main():
     # X_resampled_smote, y_resampled_smote = smote.fit_sample(ml4hX, ml4hY_temporal)
     # check_symptom_result_distribution(y_resampled_smote)
     example_patients(patients,patient_ids,5)
-    apply_machine_learning_techniques(ml4hX, ml4hY_temporal)
+    #apply_machine_learning_techniques(ml4hX, ml4hY_temporal)
+    # apply_machine_learning_techniques(X_resampled_nm, y_resampled_nm)
+
+    randomF = RandomForestClassifier()
+    randomF.fit(ml4hX,ml4hY_temporal)
+    print(randomF.feature_importances_)
 
     labels_features = ["Cough", "Fever", "Abdominal_pain", "skin_rash", "Lactic_acisdosis", "Lipodystrophy",
                        "Anemia", "Anorexia", "Cough_any_duration", "Diarrhea", "Hepatitis", "Jaundice", "Leg_pain",
@@ -218,21 +266,29 @@ def main():
     check_symptom_result_distribution(ml4hY)
 
 
+def check_temporal_symptom_distribution(y_resampled_nm):
+    sumA = 0
+    sumB = 0
+    for t in y_resampled_nm:
+        if t:
+            sumA += 1
+        elif not t:
+            sumB += 1
+    print("t: " + str(sumA))
+    print("f: " + str(sumB))
+
 
 #Checks the balance of the resulting classes
 def check_symptom_result_distribution(Y):
-    result_set_classes1 = ["Cough", "Fever", "Abdominal pain", "Skin rash",
-                           "Lactic acidosis", "Lipodystrophy", "Anemia", "Anorexia",
-                           "Diarrhea", "Hepatitis", "Jaundice", "Leg pain / numbness",
-                          "Night sweats", "Peripheral neuropathy", "Vomiting", "Weight loss / Failure to thrive / malnutrition",
-                           "Other symptom"]
-    sum_of_result_classes1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    sum_of_result_classes1 = []
+    for i in range(len(Patient.sql_symptoms)):
+        sum_of_result_classes1.append(0)
 
     for y in Y:
-        sum_of_result_classes1[result_set_classes1.index(y)] += 1
+        sum_of_result_classes1[Patient.sql_symptoms.index(y)] += 1
 
-    for result in range(len(result_set_classes1)):
-        print( result_set_classes1[result] + " : " + str( sum_of_result_classes1[result] ) )
+    for result in range(len(Patient.sql_symptoms)):
+        print( Patient.sql_symptoms[result] + " : " + str( sum_of_result_classes1[result] ) )
 
 
 def apply_machine_learning_techniques(ml4hX, ml4hY_temporal):
@@ -281,8 +337,11 @@ def apply_machine_learning_techniques(ml4hX, ml4hY_temporal):
 
 def example_patients(patients, patients_ids, limit):
     for i in range(limit):
+        patient_example = "ID " + str(patients[patients_ids[i]].nam)
         for j in range(len(patients[patients_ids[i]].feature_temporal_sympt_array)):
-            print(str( patients[patients_ids[i]].temporal_symptoms[j] ) + ": " + str( patients[patients_ids[i]].feature_temporal_sympt_array[j] ) )
+            patient_example +=" "+str( patients[patients_ids[i]].temporal_symptoms[j] ) + ": " + str( patients[patients_ids[i]].feature_temporal_sympt_array[j] )
+            #print(str( patients[patients_ids[i]].temporal_symptoms[j] ) + ": " + str( patients[patients_ids[i]].feature_temporal_sympt_array[j] ) )
+        print(patient_example)
         print("Cont sympt : " + str(patients[patients_ids[i]].continued_symptoms))
     print()
 

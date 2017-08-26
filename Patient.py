@@ -12,11 +12,10 @@ class Patient:
                 "Lactic_acisdosis", "Lipodystrophy", "Anemia", "Anorexia",
                 "Diarrhea", "Hepatitis", "Jaundice", "Leg_pain",
                 "Night_Sweats", "Other", "Peripheral_neuropathy", "Vomiting",
-                "Weight_loss", "Sex", "Birthdate"]
+                "Weight_loss", "Sex", "Birthdate", "Last Drug"]
 
     sql_symptoms = ["Cough", "Fever", "Abdominal pain", "Skin rash",
-                    "Lactic acidosis", "Lipodystrophy", "Anemia", "Anorexia",
-                    "Cough of any duration", "Diarrhea", "Hepatitis", "Jaundice",
+                     "Lipodystrophy", "Anemia", "Anorexia", "Diarrhea",
                     "Leg pain / numbness", "Night sweats", "Peripheral neuropathy", "Vomiting",
                     "Weight loss / Failure to thrive / malnutrition", "Other symptom"]
 
@@ -27,7 +26,7 @@ class Patient:
         self.adverse = "Not Adverse"
         self.secondary = 0
         self.feature_symptom_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.feature_temporal_sympt_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.feature_temporal_sympt_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.cough = 0
         self.fever = 0
         self.abdom = 0
