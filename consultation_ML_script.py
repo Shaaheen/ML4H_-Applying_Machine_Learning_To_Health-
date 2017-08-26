@@ -1,5 +1,5 @@
-#Machine Learning script to predict whether a patient is likely to miss their next scheduled medical consultation
-#Application - Can set aside more resources if likely to miss next visit - Send SMSs, reminders, visit home, etc
+# Machine Learning script to predict whether a patient is likely to miss their next scheduled medical consultation
+# Application - Can set aside more resources if likely to miss next visit - Send SMSs, reminders, visit home, etc
 
 import matplotlib.pyplot as plt
 import numpy
@@ -38,7 +38,7 @@ from sklearn.metrics import roc_curve, auc, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn import svm, datasets
-#from numpy import np
+# from numpy import np
 import pymysql
 from joblib import Parallel, delayed
 import multiprocessing
@@ -47,8 +47,9 @@ from Consultation_Patient import Consultation_Patient
 from Patient import Patient
 from ml4h_file_utils import classifaction_report_csv
 
-#To binarize the occupation feature
+# To binarize the occupation feature
 occupations = []
+
 
 def main():
     print("Connecting to ML4H DB..")
@@ -64,14 +65,15 @@ def main():
     # cur.execute("select person_id, sum(case when value_coded_name_id=1102 then 1 else 0 end) AS consultations_attended,sum(case when value_coded_name_id=1103 then 1 else 0 end) AS consultations_missed from obs where concept_id=1805 group by person_id")
     # Gets patient details - Used as features
     cur.execute(
-        "select a.person_id, gender, birthdate ,value,sum(case when value_coded_name_id=1102 then 1 else 0 end) AS consultations_attended,sum(case when value_coded_name_id=1103 then 1 else 0 end) AS consultations_missed from obs a inner join person b on a.person_id = b.person_id inner join person_attribute c on c.person_id=a.person_id where concept_id=1805 AND birthdate IS NOT NULL group by person_id")
+        "select a.person_id, gender, birthdate ,value,sum(case when value_coded_name_id=1102 then 1 else 0 end) AS consultations_attended,sum(case when value_coded_name_id=1103 then 1 else 0 end) AS consultations_missed,city_village from obs a inner join person b on a.person_id = b.person_id inner join person_attribute c on c.person_id=a.person_id inner join person_address d on a.person_id = d.person_id where concept_id=1805 AND birthdate IS NOT NULL AND city_village IS NOT NULL group by person_id;")
     print("Executed.")
 
     patient_ids = []
     patients = {}
     consultation_features = []
     consultation_results = []
-
+    occupations = []
+    locations = []
     for row in cur:
         if row[2] is None:
             continue
@@ -90,7 +92,9 @@ def main():
 
         patients[row[0]].features[3] = row[2].year
 
-        patients[row[0]].features[4] = get_occupation_index(row[3])
+        patients[row[0]].features[4] = get_feature_index(row[3],occupations)
+
+        patients[row[0]].features[5] = get_feature_index(row[6], locations)
 
         consultation_features.append(patients[row[0]].features)
 
@@ -125,7 +129,7 @@ def main():
                 ['SMOTEENN', SMOTEENN(random_state=22)],
                 ['SMOTETomek', SMOTETomek(ratio=0.06, random_state=22)],
                 ['ALLKNN', AllKNN()],
-                ['NearMiss', NearMiss(ratio=0.2) ],
+                ['NearMiss', NearMiss(ratio=0.2)],
                 ['NearMiss', NearMiss(ratio=0.01)],
                 ['CondensedNearestNeighbour', CondensedNearestNeighbour()],
                 ['TomekLinks', TomekLinks()],
@@ -145,9 +149,9 @@ def main():
     check_result_distr(Y_resamp1)
     X_resamp2, Y_resamp2 = ADASYN(ratio=0.02).fit_sample(X_resamp1, Y_resamp1)
     check_result_distr(Y_resamp2)
-    apply_machine_learning_techniques(X_resamp2, Y_resamp2 )
-    model_random_forest =  RandomForestClassifier()
-    model_random_forest.fit(X_resamp2,Y_resamp2)
+    apply_machine_learning_techniques(X_resamp2, Y_resamp2)
+    model_random_forest = RandomForestClassifier()
+    model_random_forest.fit(X_resamp2, Y_resamp2)
     print(model_random_forest.feature_importances_)
 
     print()
@@ -174,12 +178,13 @@ def main():
     apply_machine_learning_techniques(X_resamp5, Y_resamp5)
 
 
-def get_occupation_index(occupation):
-    if occupation not in occupations:
-        occupations.append(occupation)
-    return occupations.index(occupation)
+def get_feature_index(feature, feature_categories):
+    if feature not in feature_categories:
+        feature_categories.append(feature)
+    return feature_categories.index(feature)
 
-#Checks distribution of result class
+
+# Checks distribution of result class
 def check_result_distr(Y):
     count_y = 0
     count_n = 0
@@ -192,7 +197,8 @@ def check_result_distr(Y):
     print("Attended Last Consultation : " + str(count_y))
     print("Missed Last Consultation : " + str(count_n))
 
-def apply_machine_learning_techniques(X_resamp,Y_resamp):
+
+def apply_machine_learning_techniques(X_resamp, Y_resamp):
     print("Applying ML Techniques...")
     validation_size1 = 0.50
     seed1 = 7
@@ -211,8 +217,8 @@ def apply_machine_learning_techniques(X_resamp,Y_resamp):
     models1.append(('Random Forrest', RandomForestClassifier()))
     models1.append(('MLPClassifier', MLPClassifier()))
     models1.append(('AdaBoostClassifier', AdaBoostClassifier()))
-    # models1.append(('GaussianProcessClassifier', GaussianProcessClassifier(n_jobs=-2)))
-    # models1.append(('Support Vector Machine', SVC()))
+    # models1.append(('GaussianProcessClassifier', GaussianProcessClassifier()))
+    models1.append(('Support Vector Machine', SVC()))
     # evaluate each model in turn
     results1 = []
     names1 = []
@@ -227,12 +233,13 @@ def apply_machine_learning_techniques(X_resamp,Y_resamp):
         # classifaction_report_csv(classification_report(Y_validation1, model1.predict(X_validation1)),name1)
         print(msg)
         print("Roc : " + str(roc_auc_score(Y_validation1, model1.predict(X_validation1))))
-        print(classification_report( Y_validation1, model1.predict(X_validation1) ))
-        confusion_matr = confusion_matrix(Y_validation1, model1.predict(X_validation1),labels=[True,False])
-        print( "      True   | False" )
+        print(classification_report(Y_validation1, model1.predict(X_validation1)))
+        confusion_matr = confusion_matrix(Y_validation1, model1.predict(X_validation1), labels=[True, False])
+        print("      True   | False")
         print("True  " + str(confusion_matr[0][0]) + "  " + str(confusion_matr[0][1]))
         print("False  " + str(confusion_matr[1][0]) + "  " + str(confusion_matr[1][1]))
-        #print(sensitivity_specificity_support(Y_validation1, model1.predict(X_validation1), average='macro'))
+        # print(sensitivity_specificity_support(Y_validation1, model1.predict(X_validation1), average='macro'))
     print()
+
 
 main()

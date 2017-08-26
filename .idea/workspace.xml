@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/script_to_insert_patient_symptom_table.py" description="cur2 = conn.cursor()&#10;print(&quot;Executing SQL query..&quot;..." line="21" />
+    <bookmark url="file://$PROJECT_DIR$/script_to_insert_patient_symptom_table.py" description="cur2 = conn.cursor()&#10;print(&quot;Executing SQL query..&quot;..." line="23" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4e11410-387b-4468-9963-15d42571bd80" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/script_to_insert_patient_symptom_table.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Consultation_Patient.py" afterPath="$PROJECT_DIR$/Consultation_Patient.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Patient.py" afterPath="$PROJECT_DIR$/Patient.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/consultation_ML_script.py" afterPath="$PROJECT_DIR$/consultation_ML_script.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/script_to_insert_patient_symptom_table.py" afterPath="$PROJECT_DIR$/script_to_insert_patient_symptom_table.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/symptons_ML_script.py" afterPath="$PROJECT_DIR$/symptons_ML_script.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/temporal_symptoms_ML.py" afterPath="$PROJECT_DIR$/temporal_symptoms_ML.py" />
     </list>
@@ -23,13 +24,13 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/ML4H_Pipeline$script_to_insert_patient_symptom_table.coverage" NAME="script_to_insert_patient_symptom_table Coverage Results" MODIFIED="1503601078730" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ML4H_Pipeline$temporal_symptoms_ML.coverage" NAME="temporal_symptoms_ML Coverage Results" MODIFIED="1503601082064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ML4H_Pipeline$script_to_insert_patient_symptom_table.coverage" NAME="script_to_insert_patient_symptom_table Coverage Results" MODIFIED="1503752419517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ML4H_Pipeline$temporal_symptoms_ML.coverage" NAME="temporal_symptoms_ML Coverage Results" MODIFIED="1503753331289" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ML4H_Pipeline$Patient.coverage" NAME="Patient Coverage Results" MODIFIED="1501007868764" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ML4H_Pipeline$test_dates.coverage" NAME="test_dates Coverage Results" MODIFIED="1503407282828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ML4H_Pipeline$Test.coverage" NAME="Test Coverage Results" MODIFIED="1502891794582" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ML4H_Pipeline$consultation_ML_script.coverage" NAME="consultation_ML_script Coverage Results" MODIFIED="1503604294259" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ML4H_Pipeline$symptons_ML_script.coverage" NAME="symptons_ML_script Coverage Results" MODIFIED="1503604406523" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ML4H_Pipeline$consultation_ML_script.coverage" NAME="consultation_ML_script Coverage Results" MODIFIED="1503680310340" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ML4H_Pipeline$symptons_ML_script.coverage" NAME="symptons_ML_script Coverage Results" MODIFIED="1503759289563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -48,14 +49,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="symptons_ML_script.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="symptons_ML_script.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/symptons_ML_script.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="269" column="16" selection-start-line="269" selection-start-column="16" selection-end-line="269" selection-end-column="16" />
+            <state relative-caret-position="246">
+              <caret line="314" column="59" selection-start-line="314" selection-start-column="59" selection-end-line="314" selection-end-column="59" />
               <folding>
-                <marker date="1503604401844" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
-                <marker date="1503604401844" expanded="true" signature="4935:5223" ph="select perso... Obs_artvisit_sympt" />
+                <marker date="1503759289517" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
+                <marker date="1503759289517" expanded="true" signature="4935:5211" ph="select perso... Obs_artvisit_sympt" />
               </folding>
             </state>
           </provider>
@@ -64,34 +65,8 @@
       <file leaf-file-name="Patient.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Patient.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="script_to_insert_patient_symptom_table.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/script_to_insert_patient_symptom_table.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#22#0" expanded="true" />
-                <marker date="1503601615915" expanded="true" signature="558:632" ph="select perso... patient_last_symptom_dates" />
-                <marker date="1503601615915" expanded="true" signature="1118:1320" ph="select count... Obs_artvisit_sympt" />
-                <marker date="1503601615915" expanded="true" signature="2276:2422" ph="INSERT INTO patient_last_symptom_dates... " />
-                <marker date="1503601615915" expanded="true" signature="2638:2784" ph="INSERT INTO patient_last_symptom_dates... " />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="base.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/sklearn/metrics/base.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1584">
-              <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+            <state relative-caret-position="396">
+              <caret line="18" column="59" selection-start-line="18" selection-start-column="59" selection-end-line="18" selection-end-column="59" />
               <folding />
             </state>
           </provider>
@@ -100,13 +75,41 @@
       <file leaf-file-name="temporal_symptoms_ML.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/temporal_symptoms_ML.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="211" column="41" selection-start-line="211" selection-start-column="41" selection-end-line="211" selection-end-column="41" />
+            <state relative-caret-position="483">
+              <caret line="224" column="28" selection-start-line="224" selection-start-column="28" selection-end-line="224" selection-end-column="28" />
               <folding>
-                <marker date="1503500696504" expanded="true" signature="2322:3884" ph="select perso... Obs_artvisit_sympt" />
-                <marker date="1503500696504" expanded="true" signature="5951:6239" ph="select perso... Obs_artvisit_sympt" />
-                <marker date="1503500696504" expanded="true" signature="7113:7299" ph="select * fro... patient_last_symptom_dates" />
+                <marker date="1503753331252" expanded="true" signature="2610:4172" ph="select perso... Obs_artvisit_sympt" />
+                <marker date="1503753331252" expanded="true" signature="6251:6472" ph="select perso... Obs_artvisit_sympt" />
+                <marker date="1503753331252" expanded="true" signature="6251:6527" ph="select perso... Obs_artvisit_sympt" />
+                <marker date="1503753331252" expanded="true" signature="7492:7885" ph="select * fro... patient_last_symptom_dates" />
+                <marker date="1503753331252" expanded="true" signature="7701:7824" ph="select perso... Obs_drugs" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="script_to_insert_patient_symptom_table.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/script_to_insert_patient_symptom_table.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="406">
+              <caret line="41" column="53" selection-start-line="41" selection-start-column="53" selection-end-line="41" selection-end-column="53" />
+              <folding>
+                <element signature="e#0#22#0" expanded="true" />
+                <marker date="1503752408753" expanded="true" signature="622:696" ph="select perso... patient_last_symptom_dates" />
+                <marker date="1503752408753" expanded="true" signature="1185:1366" ph="select a.per... Obs_artvisit_sympt" />
+                <marker date="1503752408753" expanded="true" signature="1569:1643" ph="select perso... patient_last_symptom_dates" />
+                <marker date="1503752408753" expanded="true" signature="3598:3800" ph="select count... Obs_artvisit_sympt" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="multiclass.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/sklearn/utils/multiclass.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="22">
+              <caret line="239" column="8" selection-start-line="239" selection-start-column="8" selection-end-line="239" selection-end-column="8" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -114,11 +117,12 @@
       <file leaf-file-name="consultation_ML_script.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/consultation_ML_script.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="233" column="87" selection-start-line="233" selection-start-column="87" selection-end-line="233" selection-end-column="87" />
+            <state relative-caret-position="91">
+              <caret line="124" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="145" selection-end-column="63" />
               <folding>
-                <marker date="1503604294219" expanded="true" signature="2907:3301" ph="select a.per... obs" />
-                <marker date="1503604294219" expanded="true" signature="4363:4469" ph="select perso... obs" />
+                <marker date="1503680003741" expanded="true" signature="2912:3405" ph="select a.per... obs" />
+                <marker date="1503680003741" expanded="true" signature="2912:3406" ph="select a.per... obs" />
+                <marker date="1503680003741" expanded="true" signature="4593:4699" ph="select perso... obs" />
               </folding>
             </state>
           </provider>
@@ -127,8 +131,8 @@
       <file leaf-file-name="Consultation_Patient.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Consultation_Patient.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
+            <state relative-caret-position="198">
+              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -154,16 +158,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ranking.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/sklearn/metrics/ranking.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5126">
-              <caret line="250" column="0" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -184,10 +178,10 @@
         <option value="$PROJECT_DIR$/ml4h_file_utils.py" />
         <option value="$PROJECT_DIR$/test_dates.py" />
         <option value="$PROJECT_DIR$/Consultation_Patient.py" />
-        <option value="$PROJECT_DIR$/temporal_symptoms_ML.py" />
-        <option value="$PROJECT_DIR$/script_to_insert_patient_symptom_table.py" />
-        <option value="$PROJECT_DIR$/Patient.py" />
         <option value="$PROJECT_DIR$/consultation_ML_script.py" />
+        <option value="$PROJECT_DIR$/Patient.py" />
+        <option value="$PROJECT_DIR$/script_to_insert_patient_symptom_table.py" />
+        <option value="$PROJECT_DIR$/temporal_symptoms_ML.py" />
         <option value="$PROJECT_DIR$/symptons_ML_script.py" />
       </list>
     </option>
@@ -229,6 +223,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -250,7 +245,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -266,7 +260,7 @@
       <recent name="C:\Users\Shaaheen\Google Drive\IdeaProjects\ML4H_Pipeline" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.consultation_ML_script">
+  <component name="RunManager" selected="Python.script_to_insert_patient_symptom_table">
     <configuration default="false" name="symptons_ML_script" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -575,9 +569,9 @@
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.symptons_ML_script" />
-        <item index="1" class="java.lang.String" itemvalue="Python.consultation_ML_script" />
-        <item index="2" class="java.lang.String" itemvalue="Python.temporal_symptoms_ML" />
-        <item index="3" class="java.lang.String" itemvalue="Python.script_to_insert_patient_symptom_table" />
+        <item index="1" class="java.lang.String" itemvalue="Python.temporal_symptoms_ML" />
+        <item index="2" class="java.lang.String" itemvalue="Python.script_to_insert_patient_symptom_table" />
+        <item index="3" class="java.lang.String" itemvalue="Python.consultation_ML_script" />
         <item index="4" class="java.lang.String" itemvalue="Python.test_dates" />
       </list>
     </recent_temporary>
@@ -602,17 +596,17 @@
     <frame x="-9" y="-9" width="1938" height="1098" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21160042" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21482277" sideWeight="0.4947839" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2833828" sideWeight="0.50292826" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.06661786" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39013934" sideWeight="0.7674543" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20471597" sideWeight="0.7889366" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29581994" sideWeight="0.23254564" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21482277" sideWeight="0.5052161" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20471597" sideWeight="0.21106337" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -635,19 +629,22 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="35" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/consultation_ML_script.py</url>
+          <line>94</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="43" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="patients[623]" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Patient.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="28" column="24" selection-start-line="28" selection-start-column="24" selection-end-line="31" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -674,8 +671,8 @@
         <state relative-caret-position="1364">
           <caret line="81" column="0" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
           <folding>
-            <marker date="1503604401844" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1503604401844" expanded="true" signature="4935:5223" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="4935:5211" ph="select perso... Obs_artvisit_sympt" />
           </folding>
         </state>
       </provider>
@@ -707,8 +704,8 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1503604401844" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1503604401844" expanded="true" signature="4935:5223" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="4935:5211" ph="select perso... Obs_artvisit_sympt" />
           </folding>
         </state>
       </provider>
@@ -740,8 +737,8 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1503604401844" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1503604401844" expanded="true" signature="4935:5223" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="4935:5211" ph="select perso... Obs_artvisit_sympt" />
           </folding>
         </state>
       </provider>
@@ -848,7 +845,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
           <caret line="1112" column="0" selection-start-line="1112" selection-start-column="0" selection-end-line="1112" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -870,13 +866,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
           <caret line="67" column="12" selection-start-line="67" selection-start-column="12" selection-end-line="67" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ml4h_file_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -937,7 +926,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1584">
           <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -955,66 +943,85 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Consultation_Patient.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/sklearn/utils/multiclass.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="239" column="8" selection-start-line="239" selection-start-column="8" selection-end-line="239" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Patient.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+        <state relative-caret-position="396">
+          <caret line="18" column="59" selection-start-line="18" selection-start-column="59" selection-end-line="18" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/consultation_ML_script.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="91">
+          <caret line="124" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="145" selection-end-column="63" />
+          <folding>
+            <marker date="1503680003741" expanded="true" signature="2912:3405" ph="select a.per... obs" />
+            <marker date="1503680003741" expanded="true" signature="2912:3406" ph="select a.per... obs" />
+            <marker date="1503680003741" expanded="true" signature="4593:4699" ph="select perso... obs" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ml4h_file_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/temporal_symptoms_ML.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="211" column="41" selection-start-line="211" selection-start-column="41" selection-end-line="211" selection-end-column="41" />
+        <state relative-caret-position="483">
+          <caret line="224" column="28" selection-start-line="224" selection-start-column="28" selection-end-line="224" selection-end-column="28" />
           <folding>
-            <marker date="1503500696504" expanded="true" signature="2322:3884" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1503500696504" expanded="true" signature="5951:6239" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1503500696504" expanded="true" signature="7113:7299" ph="select * fro... patient_last_symptom_dates" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Consultation_Patient.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/script_to_insert_patient_symptom_table.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-            <marker date="1503601615915" expanded="true" signature="558:632" ph="select perso... patient_last_symptom_dates" />
-            <marker date="1503601615915" expanded="true" signature="1118:1320" ph="select count... Obs_artvisit_sympt" />
-            <marker date="1503601615915" expanded="true" signature="2276:2422" ph="INSERT INTO patient_last_symptom_dates... " />
-            <marker date="1503601615915" expanded="true" signature="2638:2784" ph="INSERT INTO patient_last_symptom_dates... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/consultation_ML_script.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="233" column="87" selection-start-line="233" selection-start-column="87" selection-end-line="233" selection-end-column="87" />
-          <folding>
-            <marker date="1503604294219" expanded="true" signature="2907:3301" ph="select a.per... obs" />
-            <marker date="1503604294219" expanded="true" signature="4363:4469" ph="select perso... obs" />
+            <marker date="1503753331252" expanded="true" signature="2610:4172" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503753331252" expanded="true" signature="6251:6472" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503753331252" expanded="true" signature="6251:6527" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503753331252" expanded="true" signature="7492:7885" ph="select * fro... patient_last_symptom_dates" />
+            <marker date="1503753331252" expanded="true" signature="7701:7824" ph="select perso... Obs_drugs" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/symptons_ML_script.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="269" column="16" selection-start-line="269" selection-start-column="16" selection-end-line="269" selection-end-column="16" />
+        <state relative-caret-position="246">
+          <caret line="314" column="59" selection-start-line="314" selection-start-column="59" selection-end-line="314" selection-end-column="59" />
           <folding>
-            <marker date="1503604401844" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1503604401844" expanded="true" signature="4935:5223" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="4935:5211" ph="select perso... Obs_artvisit_sympt" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/script_to_insert_patient_symptom_table.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="406">
+          <caret line="41" column="53" selection-start-line="41" selection-start-column="53" selection-end-line="41" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+            <marker date="1503752408753" expanded="true" signature="622:696" ph="select perso... patient_last_symptom_dates" />
+            <marker date="1503752408753" expanded="true" signature="1185:1366" ph="select a.per... Obs_artvisit_sympt" />
+            <marker date="1503752408753" expanded="true" signature="1569:1643" ph="select perso... patient_last_symptom_dates" />
+            <marker date="1503752408753" expanded="true" signature="3598:3800" ph="select count... Obs_artvisit_sympt" />
           </folding>
         </state>
       </provider>

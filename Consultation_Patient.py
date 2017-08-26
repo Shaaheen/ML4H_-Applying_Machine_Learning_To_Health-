@@ -5,7 +5,7 @@ class Consultation_Patient:
         self.age = None
         self.consultations_attended = 0
         self.consultations_missed = 0
-        self.features_list = ["Consultations_Attended", "Consultations_Missed", "Sex", "Birthdate", "Occupation" ]
-        self.features = [0,0,0,0,0]
+        self.features_list = ["Consultations_Attended", "Consultations_Missed", "Sex", "Birthdate", "Occupation", "Location" ]
+        self.features = [0,0,0,0,0,0]
 
         self.attended_last_consultation = None
