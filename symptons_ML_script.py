@@ -79,12 +79,14 @@ def main():
     cur1 = conn.cursor()
     print("Executing SQL query..")
     #Gets the last reported symptom that a patient reported - RESULT CLASS (Trying to predict this)
-    cur1.execute("select person_id, value_coded_name_id,name, MAX(obs_datetime) from Obs_artvisit_sympt a inner join concept_name n on a.value_coded_name_id = n.concept_name_id where value_coded_name_id IN (524,110,4315,156,3,888,11335,17,30,226,2325,4407,1576,10894,9345,838,4355,11333) Group by person_id")
+    cur1.execute("select person_id, value_coded_name_id,name, MAX(obs_datetime) from Obs_artvisit_sympt a inner join concept_name n on a.value_coded_name_id = n.concept_name_id where value_coded_name_id IN (524,110,4315,156,3,888,11335,17,2325,4407,10894,9345,838,4355,11333) Group by person_id")
     print("Executed")
     cur1.close()
 
     #Loads result set - last symptom reported by patient
     for row in cur1:
+        if row[2] == "None" or row[2] =='None' or row[2] is None:
+            continue
         if (row[0] not in patient_ids):
             patient_ids.append(row[0])
             patients[row[0]] = (Patient(int(row[0])))
@@ -111,6 +113,8 @@ def main():
     for id in patient_ids:
         if patients[id].check_if_null_features():
             continue
+        if patients[id].last_symptom == "None":
+            continue
         ml4hX.append( patients[id].feature_symptom_array )
         ml4hY.append(patients[id].last_symptom)
         ml4hY_multiclass.append(patients[id].last_symptom_class)
@@ -122,35 +126,45 @@ def main():
 
     print("Orig")
     check_symptom_result_distribution(ml4hY)
+    print()
+    # print("ADASYN")
+    # ada = ADASYN( random_state=40)
+    # X_resampled, y_resampled = ada.fit_sample(ml4hX, ml4hY_multiclass)
+    # check_symptom_result_distribution(y_resampled)
 
-    print("ADASYN")
-    ada = ADASYN( random_state=40)
-    X_resampled, y_resampled = ada.fit_sample(ml4hX, ml4hY_multiclass)
-    check_symptom_result_distribution(y_resampled)
-
-    print("Rando")
-    rand_over = RandomOverSampler(random_state=0)
-    X_resampled_rand, y_resampled_rand = rand_over.fit_sample(ml4hX,ml4hY)
-    check_symptom_result_distribution(y_resampled_rand)
-
-    print("ALLKNN")
-    allknn = AllKNN()
-    X_resampled_allknn, y_resampled_allknn = allknn.fit_sample(ml4hX, ml4hY)
-    check_symptom_result_distribution(y_resampled_allknn)
+    # print("ALLKNN")
+    # allknn = AllKNN()
+    # X_resampled_allknn, y_resampled_allknn = allknn.fit_sample(ml4hX, ml4hY)
+    # check_symptom_result_distribution(y_resampled_allknn)
 
     print("NearMiss")
-    nearmiss = NearMiss(ratio=0.2)
-    X_resampled_nm, y_resampled_nm = nearmiss.fit_sample(ml4hX, ml4hY)
+    nearmiss = NearMiss(ratio=0.025)
+    X_resampled_nm, y_resampled_nm = nearmiss.fit_sample(ml4hX, ml4hY_multiclass)
     check_symptom_result_distribution(y_resampled_nm)
+    print()
+
+    print("RandomOVer")
+    randomOVer = RandomOverSampler()
+    X_resampled_ranO, y_resampled_ranO = randomOVer.fit_sample(X_resampled_nm, y_resampled_nm)
+    check_symptom_result_distribution(y_resampled_ranO)
+    print()
+
+
+    print("SMOTE")
+    sme = SMOTE(ratio=0.5)
+    X_res, y_res = sme.fit_sample(ml4hX, ml4hY)
+    check_symptom_result_distribution(y_res)
+    print()
+
 
     # sme = SMOTEENN(random_state=42, k = 3)
     # X_res, y_res = sme.fit_sample(ml4hX, ml4hY)
     # check_symptom_result_distribution(y_res)
 
-    print("Cluster Centroids")
-    cc = ClusterCentroids(random_state=0)
-    X_resampled_cluster, y_resampled_cluster = cc.fit_sample(ml4hX, ml4hY)
-    check_symptom_result_distribution(y_resampled_cluster)
+    # print("Cluster Centroids")
+    # cc = ClusterCentroids(random_state=0)
+    # X_resampled_cluster, y_resampled_cluster = cc.fit_sample(ml4hX, ml4hY)
+    # check_symptom_result_distribution(y_resampled_cluster)
     # smote = SMOTE(kind='borderline1')
     # X_resampled_smote, y_resampled_smote = smote.fit_sample(ml4hX, ml4hY)
     # check_symptom_result_distribution(y_resampled_smote)
@@ -165,7 +179,15 @@ def main():
     print(c)
     print()
 
-    apply_machine_learning_techniques(ml4hX,ml4hY_multiclass)
+    randf = RandomForestClassifier()
+    randf.fit(ml4hX,ml4hY)
+    print(randf.feature_importances_)
+    print("ORIGINAL")
+    apply_machine_learning_techniques(ml4hX,ml4hY_multiclass, "Original")
+    print("NEAR MISS UNDERSAMPLE 0.025")
+    apply_machine_learning_techniques(X_resampled_nm, y_resampled_nm, "NM_Under_0.025" )
+    print("NEAR MISS ADJUSTED OVERSAMPLE")
+    apply_machine_learning_techniques(X_resampled_ranO, y_resampled_ranO, "NM_ADJ_Over")
 
     labels_features = ["Cough", "Fever", "Abdominal_pain", "skin_rash", "Lactic_acisdosis", "Lipodystrophy",
                        "Anemia", "Anorexia", "Cough_any_duration", "Diarrhea", "Hepatitis", "Jaundice", "Leg_pain",
@@ -184,13 +206,15 @@ def main():
     #apply_model_with_ROC(ml4hX,ml4hY_multiclass)
 
 
-def apply_machine_learning_techniques(X,Y):
+def apply_machine_learning_techniques(X,Y,balance_name):
+    f = open(balance_name + '_symptoms.csv', 'w')
+    f.write(balance_name + "\r\n")
     global classifier
     print("Applying ML Techniques...")
-    validation_size1 = 0.50
+    validation_size1 = 0.2
     seed1 = 7
     ml4hY_multiclass_bin = label_binarize(Y,
-                                          classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
+                                          classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
     # X_train1, X_validation1, Y_train1, Y_validation1 = model_selection.train_test_split(ml4hX, ml4hY, test_size=validation_size1,
     #                                                                                 random_state=seed1)
     X_train1, X_validation1, Y_train1, Y_validation1 = model_selection.train_test_split(X, Y,
@@ -214,7 +238,7 @@ def apply_machine_learning_techniques(X,Y):
     results1 = []
     names1 = []
     for name1, model1 in models1:
-        apply_model_with_ROC(X,Y,model1)
+        apply_model_with_ROC(X,Y,model1,f)
         kfold1 = model_selection.KFold(n_splits=10, random_state=seed1)
         cv_results1 = model_selection.cross_val_score(model1, X_train1, Y_train1, cv=kfold1, scoring=scoring)
         results1.append(cv_results1)
@@ -228,16 +252,20 @@ def apply_machine_learning_techniques(X,Y):
         # )
         # classifaction_report_csv(classification_report(Y_validation1, model1.predict(X_validation1)),name1)
         print(msg)
+        f.write(name1+"," + str( cv_results1.mean() ) + "\n")
+        f.write("\r\n")
+        print()
+    f.close()
 
 
 #Checks the balance of the resulting classes
 def check_symptom_result_distribution(Y):
-    result_set_classes1 = ["Cough", "Fever", "Abdominal pain", "Skin rash",
-                           "Lactic acidosis", "Lipodystrophy", "Anemia", "Anorexia",
-                           "Diarrhea", "Hepatitis", "Jaundice", "Leg pain / numbness",
-                          "Night sweats", "Peripheral neuropathy", "Vomiting", "Weight loss / Failure to thrive / malnutrition",
-                           "Other symptom"]
-    sum_of_result_classes1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # result_set_classes1 = ["Cough", "Fever", "Abdominal pain", "Skin rash",
+    #                        "Lactic acidosis", "Lipodystrophy", "Anemia", "Anorexia",
+    #                        "Diarrhea", "Hepatitis", "Jaundice", "Leg pain / numbness",
+    #                       "Night sweats", "Peripheral neuropathy", "Vomiting", "Weight loss / Failure to thrive / malnutrition",
+    #                        "Other symptom"]
+    sum_of_result_classes1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     for y in Y:
         if isinstance( y ,int ):
@@ -245,18 +273,18 @@ def check_symptom_result_distribution(Y):
         elif type(y) == int:
             sum_of_result_classes1[y] += 1
         else:
-            if y not in result_set_classes1:
+            if y not in Patient.sql_symptoms:
                 sum_of_result_classes1[y] += 1
             else:
-                sum_of_result_classes1[result_set_classes1.index(y)] += 1
+                sum_of_result_classes1[Patient.sql_symptoms.index(y)] += 1
 
-    for result in range(len(result_set_classes1)):
-        print( result_set_classes1[result] + " : " + str( sum_of_result_classes1[result] ) )
+    for result in range(len(Patient.sql_symptoms)):
+        print( Patient.sql_symptoms[result] + " : " + str( sum_of_result_classes1[result] ) )
 
 
-def apply_model_with_ROC(X,Y, model2):
+def apply_model_with_ROC(X,Y, model2, file):
     global classifier
-    yRoc = label_binarize(Y, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
+    yRoc = label_binarize(Y, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
     # print(yRoc)
     n_classes = yRoc.shape[1]
     ml4hX_multiclass = numpy.array(X, numpy.int32)
@@ -270,15 +298,22 @@ def apply_model_with_ROC(X,Y, model2):
     fpr = dict()
     tpr = dict()
     roc_auc = dict()
+    ave = 0
     for i in range(n_classes):
         fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
         roc_auc[i] = auc(fpr[i], tpr[i])
-        print( Patient.sql_symptoms[i] + " : " +  roc_auc[i])
+        ave+=roc_auc[i]
+        print( Patient.sql_symptoms[i] + " : " +  str(roc_auc[i]))
+        if file is not None:
+            file.write(  Patient.sql_symptoms[i] + "," +  str(roc_auc[i]) + "\n")
 
     # Compute micro-average ROC curve and ROC area
-    fpr["macro"], tpr["macro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
-    roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
-    print("ROC: " + str(roc_auc["macro"]) )
+    fpr["samples"], tpr["samples"], _ = roc_curve(y_test.ravel(), y_score.ravel())
+    roc_auc["samples"] = auc(fpr["samples"], tpr["samples"])
+    print("ROC: " + str(roc_auc["samples"]) + " avg : " + str(ave/n_classes))
+    if file is not None:
+        file.write("ROC," + str(roc_auc["samples"]) + "\n")
+        file.write("Avg ROC ," + str(ave/n_classes) + "\n")
     #
     # # print(roc_auc_score(ml4hY,knn1.predict(ml4hX)))
     # # print(knn1.predict([230, 40]))
