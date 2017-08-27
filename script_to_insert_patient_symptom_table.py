@@ -1,5 +1,5 @@
 import multiprocessing
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 
 import pymysql
@@ -8,40 +8,102 @@ from joblib import delayed
 
 from Patient import Patient
 
-mydate = datetime(1943, 3, 13, 15, 10, 20)  # year, month, day
-mydate2 = datetime(1943, 3, 17, 15, 10, 20)  # year, month, day
+def main():
+    global date
+    mydate = datetime(1943, 3, 13, 15, 10, 20)  # year, month, day
+    mydate2 = datetime(1943, 3, 17, 15, 10, 20)  # year, month, day
 
-print(mydate2 - mydate)
+    print(mydate2 - mydate)
 
-print("Connecting to ML4H DB..")
+    print("Connecting to ML4H DB..")
 
-conn = pymysql.connect(host='nightmare.cs.uct.ac.za', port=3306, user='ochomo001', passwd='oesaerex', db='ochomo001')
+    conn = pymysql.connect(host='nightmare.cs.uct.ac.za', port=3306, user='ochomo001', passwd='oesaerex', db='ochomo001')
 
-print("Connected")
+    print("Connected")
 
-cur2 = conn.cursor()
-print("Executing SQL query..")
-cur2.execute("select person_id, second_last_symptom_date from patient_last_symptom_dates")
-print("Executed")
-cur2.close()
+    cur2 = conn.cursor()
+    print("Executing SQL query..")
+    cur2.execute("select person_id, second_last_symptom_date from patient_last_symptom_dates")
+    print("Executed")
+    cur2.close()
 
-patients = {}
-patient_ids = []
+    patients = {}
+    patient_ids = []
 
-print("Querying...")
-for row in cur2:
+    print("Querying...")
+    for row in cur2:
+        date = row[1]
+        if date is None:
+            continue
+        #dt = datetime.strptime(row[1], "%b %d %Y %H:%M")
+        # print(date)
+        if (row[0] not in patient_ids):
+            patient_ids.append(row[0])
+            patients[row[0]] = (Patient(int(row[0])))
+            patients[row[0]].second_latest_datetime = row[1]
+
+    cur3 = conn.cursor()
+    print("Executing SQL query..")
+    #cur3.execute("select a.person_id,second_last_symptom_date from Obs_artvisit_sympt a inner join patient_last_symptom_dates b on b.person_id = a.person_id where second_last_symptom_date IS NOT NULL")
+    cur3.execute("select person_id,obs_datetime from Obs_artvisit_sympt")
+    print("Executed")
+    cur3.close()
+
+    count = 0
+    for row in cur3:
+        if row[0] in patient_ids:
+            obs_date = row[1]
+            if obs_date > (patients[row[0]].second_latest_datetime - timedelta(days=40)) and obs_date < patients[row[0]].second_latest_datetime :
+                patients[row[0]].symptoms_in_prev_month +=1
+        count+=1
+    print(count)
+
+    #
+    # cur3 = conn.cursor()
+    # print("Executing SQL query..")
+    # cur3.execute("select person_id, second_last_symptom_date from patient_last_symptom_dates")
+    # print("Executed")
+    # cur3.close()
+    # # num_cores = multiprocessing.cpu_count() - 1
+    # #
+    # # results = Parallel(n_jobs=num_cores)(delayed(set_patients_prev_month_symptoms)(row, patient_ids, patients, conn) for row in cur3)
+    #
+    # for row in cur3:
+    #     set_patients_prev_month_symptoms(row, patient_ids, patients, conn)
+
+    # for row in cur2:
+    #     set_patients_prev_month_symptoms()
+
+    print("Done querying.")
+
+    f = open('symptoms_in_last_month.txt', 'w')
+    count = 0
+    for patient_id in patient_ids:
+        f.write(str(patient_id) + "," + str(patients[patient_id].symptoms_in_prev_month) + "\r\n")
+        count += 1
+    f.close()
+
+    print(count)
+
+    print("Inserting...")
+    for j in patient_ids:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO patient_prev_month_symptoms (person_id, from_date, number_of_symptoms) VALUES (%s, %s, %s)",
+            (j, str( (patients[j]).second_latest_datetime ), str( (patients[j]).symptoms_in_prev_month )))
+
+        cursor.close()
+
+    conn.commit()
+    print("Inserted")
+    conn.close()
+
+
+def set_patients_prev_month_symptoms(row,patient_ids,patients, conn):
     date = row[1]
-    if date is None:
-        continue
-    #dt = datetime.strptime(row[1], "%b %d %Y %H:%M")
-    # print(date)
-    if (row[0] not in patient_ids):
-        patient_ids.append(row[0])
-        patients[row[0]] = (Patient(int(row[0])))
-
-
-def set_patients_prev_month_symptoms(row):
-    if (row[0] not in patient_ids):
+    if row[1] is None:
+        return
+    if (row[0] in patient_ids):
         cur3 = conn.cursor()
         cur3.execute("select count(*) from Obs_artvisit_sympt where person_id=" + str(
             row[0]) + " AND obs_datetime>(DATE_SUB(DATE('" + str(
@@ -52,42 +114,5 @@ def set_patients_prev_month_symptoms(row):
             patients[row[0]].symptoms_in_prev_month = int(row3[0])
 
 
-# num_cores = multiprocessing.cpu_count() - 2
-#
-# results = Parallel(n_jobs=num_cores)(delayed(set_patients_prev_month_symptoms)(row) for row in cur2)
-for row in cur2:
-    set_patients_prev_month_symptoms(row)
 
-# for row in cur2:
-#     set_patients_prev_month_symptoms()
-
-print("Done querying.")
-
-f = open('symptoms_in_last_month.txt', 'w')
-count =0
-for patient_id in patient_ids:
-    f.write( str( patient_id ) + "," + str(patients[patient_id].symptoms_in_prev_month) +"\r\n")
-    count+=1
-f.close()
-
-print(count)
-
-
-# print("Inserting...")
-# for j in patient_ids:
-#     cursor = conn.cursor()
-#     if (patients[j]).time_between_symptom_reports.days < 365:
-#         #print( j, str( (patients[j]).latest_datetime ), str( (patients[j]).second_latest_datetime ), patients[j].time_between_symptom_reports.days )
-#         cursor.execute("INSERT INTO patient_last_symptom_dates (person_id, last_symptom_date, second_last_symptom_date, days_between_last_symptoms) VALUES (%s, %s, %s,%s)",
-#                        (j, str( (patients[j]).latest_datetime ), str( (patients[j]).second_latest_datetime ), patients[j].time_between_symptom_reports.days))
-#     else:
-#         cursor.execute(
-#             "INSERT INTO patient_last_symptom_dates (person_id, last_symptom_date, second_last_symptom_date, days_between_last_symptoms) VALUES (%s, %s, %s,%s)",
-#             (j, str( (patients[j]).latest_datetime ), None, None))
-#
-#     cursor.close()
-#
-#
-# conn.commit()
-# print("Inserted")
-conn.close()
+main()
