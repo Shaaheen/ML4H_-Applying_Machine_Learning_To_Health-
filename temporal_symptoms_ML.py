@@ -86,7 +86,7 @@ def main():
                                                    int(row[6]),int(row[7]), int(row[8]), int(row[9]),
                                                    int(row[11]), int(row[12]), int(row[13]), int(row[14]),
                                                    int(row[15]),int(row[16]),int(row[17]), int(row[18]),
-                                                   int(row[19]), sex, int(row[21].year) , 0]
+                                                   int(row[19]), sex, int(row[21].year) , 0, 0]
 
         patients[row[0]].feature_symptom_array = [int(row[2]) + int(row[10]), int(row[3]), int(row[4]), int(row[5]),
                                                          int(row[6]), int(row[7]), int(row[8]), int(row[9]),
@@ -130,13 +130,16 @@ def main():
     #NEW RESULT CLASS
     # - checking if patient is likely to continue reporting symptoms in the 40 days
     # Binary result class - True (Have continued reporting symptoms) - False (Have not continued reporting symptoms)
-    cur2.execute("select a.person_id,last_symptom_date,second_last_symptom_date,days_between_last_symptoms,gender,birthdate,last_drug from patient_last_symptom_dates a inner join person b on a.person_id=b.person_id inner join (select person_id, max(obs_datetime), value_drug AS last_drug from Obs_drugs where value_drug IS NOT NULL group by person_id) AS last_drug_table on last_drug_table.person_id=a.person_id")
+    cur2.execute("select a.person_id,last_symptom_date,second_last_symptom_date,days_between_last_symptoms,gender,birthdate,last_drug,number_of_symptoms from patient_last_symptom_dates a inner join person b on a.person_id=b.person_id inner join (select person_id, max(obs_datetime), value_drug AS last_drug from Obs_drugs where value_drug IS NOT NULL group by person_id) AS last_drug_table on last_drug_table.person_id=a.person_id inner join patient_prev_month_symptoms d on a.person_id=d.person_id")
     print("Executed")
     cur2.close()
     for row in cur2:
         if (row[0] in patient_ids):
             drug_index = Patient.temporal_symptoms.index("Last Drug")
             patients[row[0]].feature_temporal_sympt_array[drug_index] = int(row[6])
+
+            drug_index = Patient.temporal_symptoms.index("Symptoms_prev_month")
+            patients[row[0]].feature_temporal_sympt_array[drug_index] = int(row[7])
             if (row[3] == None or int(row[3]) >41) or patients[row[0]].last_symptom == "None":
                 patients[row[0]].continued_symptoms = False
             elif int(row[3]) < 41 and patients[row[0]].last_symptom != "None":
