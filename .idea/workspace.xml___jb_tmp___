@@ -47,8 +47,8 @@
       <file leaf-file-name="symptons_ML_script.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/symptons_ML_script.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2897">
-              <caret line="322" column="18" selection-start-line="322" selection-start-column="18" selection-end-line="322" selection-end-column="18" />
+            <state relative-caret-position="-624">
+              <caret line="210" column="34" selection-start-line="210" selection-start-column="34" selection-end-line="210" selection-end-column="34" />
               <folding>
                 <marker date="1503759289517" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
                 <marker date="1503759289517" expanded="true" signature="4935:5211" ph="select perso... Obs_artvisit_sympt" />
@@ -71,13 +71,13 @@
         <entry file="file://$PROJECT_DIR$/temporal_symptoms_ML.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="257">
-              <caret line="329" column="36" selection-start-line="329" selection-start-column="36" selection-end-line="329" selection-end-column="36" />
+              <caret line="217" column="25" selection-start-line="217" selection-start-column="25" selection-end-line="217" selection-end-column="25" />
               <folding>
-                <marker date="1504113901709" expanded="true" signature="2608:4170" ph="select perso... Obs_artvisit_sympt" />
-                <marker date="1504113901709" expanded="true" signature="6254:6475" ph="select perso... Obs_artvisit_sympt" />
-                <marker date="1504113901709" expanded="true" signature="6254:6530" ph="select perso... Obs_artvisit_sympt" />
-                <marker date="1504113901709" expanded="true" signature="7495:7975" ph="select * fro... patient_last_symptom_dates" />
-                <marker date="1504113901709" expanded="true" signature="7723:7846" ph="select perso... Obs_drugs" />
+                <marker date="1504113901709" expanded="true" signature="2628:4190" ph="select perso... Obs_artvisit_sympt" />
+                <marker date="1504113901709" expanded="true" signature="6274:6495" ph="select perso... Obs_artvisit_sympt" />
+                <marker date="1504113901709" expanded="true" signature="6274:6550" ph="select perso... Obs_artvisit_sympt" />
+                <marker date="1504113901709" expanded="true" signature="7515:7995" ph="select * fro... patient_last_symptom_dates" />
+                <marker date="1504113901709" expanded="true" signature="7743:7866" ph="select perso... Obs_drugs" />
               </folding>
             </state>
           </provider>
@@ -568,11 +568,11 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.06661786" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3118971" sideWeight="0.7889366" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3118971" sideWeight="0.7889366" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21482277" sideWeight="0.5052161" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3118971" sideWeight="0.21106337" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3118971" sideWeight="0.21106337" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -953,17 +953,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/symptons_ML_script.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2897">
-          <caret line="322" column="18" selection-start-line="322" selection-start-column="18" selection-end-line="322" selection-end-column="18" />
-          <folding>
-            <marker date="1503759289517" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1503759289517" expanded="true" signature="4935:5211" ph="select perso... Obs_artvisit_sympt" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Patient.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
@@ -987,16 +976,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/symptons_ML_script.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-624">
+          <caret line="210" column="34" selection-start-line="210" selection-start-column="34" selection-end-line="210" selection-end-column="34" />
+          <folding>
+            <marker date="1503759289517" expanded="true" signature="2138:3634" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1503759289517" expanded="true" signature="4935:5211" ph="select perso... Obs_artvisit_sympt" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/temporal_symptoms_ML.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="257">
-          <caret line="329" column="36" selection-start-line="329" selection-start-column="36" selection-end-line="329" selection-end-column="36" />
+          <caret line="217" column="25" selection-start-line="217" selection-start-column="25" selection-end-line="217" selection-end-column="25" />
           <folding>
-            <marker date="1504113901709" expanded="true" signature="2608:4170" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1504113901709" expanded="true" signature="6254:6475" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1504113901709" expanded="true" signature="6254:6530" ph="select perso... Obs_artvisit_sympt" />
-            <marker date="1504113901709" expanded="true" signature="7495:7975" ph="select * fro... patient_last_symptom_dates" />
-            <marker date="1504113901709" expanded="true" signature="7723:7846" ph="select perso... Obs_drugs" />
+            <marker date="1504113901709" expanded="true" signature="2628:4190" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1504113901709" expanded="true" signature="6274:6495" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1504113901709" expanded="true" signature="6274:6550" ph="select perso... Obs_artvisit_sympt" />
+            <marker date="1504113901709" expanded="true" signature="7515:7995" ph="select * fro... patient_last_symptom_dates" />
+            <marker date="1504113901709" expanded="true" signature="7743:7866" ph="select perso... Obs_drugs" />
           </folding>
         </state>
       </provider>

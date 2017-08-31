@@ -58,22 +58,6 @@ def main():
         count+=1
     print(count)
 
-    #
-    # cur3 = conn.cursor()
-    # print("Executing SQL query..")
-    # cur3.execute("select person_id, second_last_symptom_date from patient_last_symptom_dates")
-    # print("Executed")
-    # cur3.close()
-    # # num_cores = multiprocessing.cpu_count() - 1
-    # #
-    # # results = Parallel(n_jobs=num_cores)(delayed(set_patients_prev_month_symptoms)(row, patient_ids, patients, conn) for row in cur3)
-    #
-    # for row in cur3:
-    #     set_patients_prev_month_symptoms(row, patient_ids, patients, conn)
-
-    # for row in cur2:
-    #     set_patients_prev_month_symptoms()
-
     print("Done querying.")
 
     f = open('symptoms_in_last_month.txt', 'w')
