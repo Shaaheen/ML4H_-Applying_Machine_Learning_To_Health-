@@ -38,8 +38,9 @@ from joblib import Parallel, delayed
 import multiprocessing
 from Patient import Patient
 from ml4h_file_utils import classifaction_report_csv
-
+variable_file = None
 def main():
+    global variable_file
     print("Connecting to ML4H DB..")
 
     conn = pymysql.connect(host='nightmare.cs.uct.ac.za', port=3306, user='ochomo001', passwd='oesaerex', db='ochomo001')
@@ -181,7 +182,13 @@ def main():
 
     randf = RandomForestClassifier()
     randf.fit(ml4hX,ml4hY)
+    variable_file = open("symptom_variable_significance.csv",'w')
+    for symptom in Patient.symptoms:
+        variable_file.write("," + symptom)
+    variable_file.write("\n")
+
     print(randf.feature_importances_)
+
     print("ORIGINAL")
     apply_machine_learning_techniques(ml4hX,ml4hY_multiclass, "Original")
     print("NEAR MISS UNDERSAMPLE 0.025")
@@ -202,6 +209,7 @@ def main():
     print("result class distribution")
 
     check_symptom_result_distribution(ml4hY)
+    variable_file.close()
 
     #apply_model_with_ROC(ml4hX,ml4hY_multiclass)
 
@@ -238,7 +246,11 @@ def apply_machine_learning_techniques(X,Y,balance_name):
     results1 = []
     names1 = []
     for name1, model1 in models1:
-        apply_model_with_ROC(X,Y,model1,f)
+        if name1 == 'Random Forrest':
+            apply_model_with_ROC(X, Y, model1, f, True)
+        else:
+            apply_model_with_ROC(X, Y, model1, f, False)
+
         kfold1 = model_selection.KFold(n_splits=10, random_state=seed1)
         cv_results1 = model_selection.cross_val_score(model1, X_train1, Y_train1, cv=kfold1, scoring=scoring)
         results1.append(cv_results1)
@@ -247,10 +259,6 @@ def apply_machine_learning_techniques(X,Y,balance_name):
         model1.fit(X_train1, Y_train1)
         classifier = OneVsRestClassifier(model1)
         classifier.fit(X_train1, Y_train1)
-        # roc_auc_score(
-        #     Y_validation1, model1.predict(X_validation1)
-        # )
-        # classifaction_report_csv(classification_report(Y_validation1, model1.predict(X_validation1)),name1)
         print(msg)
         f.write(name1+"," + str( cv_results1.mean() ) + "\n")
         f.write("\r\n")
@@ -282,7 +290,7 @@ def check_symptom_result_distribution(Y):
         print( Patient.sql_symptoms[result] + " : " + str( sum_of_result_classes1[result] ) )
 
 
-def apply_model_with_ROC(X,Y, model2, file):
+def apply_model_with_ROC(X,Y, model2, file,if_rand_forest):
     global classifier
     yRoc = label_binarize(Y, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
     # print(yRoc)
@@ -293,12 +301,16 @@ def apply_model_with_ROC(X,Y, model2, file):
                                                         random_state=0)
     # Learn to predict each class against the other
     classifier = OneVsRestClassifier(model2)
-    y_score = classifier.fit(X_train, y_train).predict(X_test)
+    classifier.fit(X_train, y_train)
+    y_score = classifier.predict(X_test)
+
     # Compute ROC curve and ROC area for each class
     fpr = dict()
     tpr = dict()
     roc_auc = dict()
     ave = 0
+    if if_rand_forest :
+        variable_file.write( str(file.name) + "\n" )
     for i in range(n_classes):
         fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
         roc_auc[i] = auc(fpr[i], tpr[i])
@@ -306,6 +318,15 @@ def apply_model_with_ROC(X,Y, model2, file):
         print( Patient.sql_symptoms[i] + " : " +  str(roc_auc[i]))
         if file is not None:
             file.write(  Patient.sql_symptoms[i] + "," +  str(roc_auc[i]) + "\n")
+        if if_rand_forest:
+            variable_file.write( Patient.sql_symptoms[i] )
+            for significance in classifier.estimators_[i].feature_importances_:
+                variable_file.write("," + str(significance))
+
+            variable_file.write("\n")
+
+    if if_rand_forest:
+        variable_file.write("\n")
 
     # Compute micro-average ROC curve and ROC area
     fpr["samples"], tpr["samples"], _ = roc_curve(y_test.ravel(), y_score.ravel())
@@ -314,16 +335,6 @@ def apply_model_with_ROC(X,Y, model2, file):
     if file is not None:
         file.write("ROC," + str(roc_auc["samples"]) + "\n")
         file.write("Avg ROC ," + str(ave/n_classes) + "\n")
-    #
-    # # print(roc_auc_score(ml4hY,knn1.predict(ml4hX)))
-    # # print(knn1.predict([230, 40]))
-    # # print(X_validation1)
-    # # print(predictions1)
-    # # print(Y_validation1)
-    # # print("h")
-    # # print(accuracy_score(Y_validation1, predictions1))
-    # # print(confusion_matrix(Y_validation1, predictions1))
-    # # print(classification_report(Y_validation1, predictions1))
 
 
 
