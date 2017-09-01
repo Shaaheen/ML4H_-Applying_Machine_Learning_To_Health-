@@ -53,7 +53,7 @@ def main():
     for row in cur3:
         if row[0] in patient_ids:
             obs_date = row[1]
-            if obs_date > (patients[row[0]].second_latest_datetime - timedelta(days=40)) and obs_date < patients[row[0]].second_latest_datetime :
+            if obs_date > (patients[row[0]].second_latest_datetime - timedelta(days=10)) and obs_date < patients[row[0]].second_latest_datetime :
                 patients[row[0]].symptoms_in_prev_month +=1
         count+=1
     print(count)
@@ -73,7 +73,7 @@ def main():
     for j in patient_ids:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO patient_prev_month_symptoms (person_id, from_date, number_of_symptoms) VALUES (%s, %s, %s)",
+            "INSERT INTO ML4H_prev_10_symptoms (person_id, from_date, number_of_symptoms) VALUES (%s, %s, %s)",
             (j, str( (patients[j]).second_latest_datetime ), str( (patients[j]).symptoms_in_prev_month )))
 
         cursor.close()
