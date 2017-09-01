@@ -122,7 +122,8 @@ def main():
         patients[row[0]].set_sympt_class()  # Indexing - Binaryzing classes for ROC scores later on
 
     cur2 = query_for_40_day_prev_symptoms(conn)
-    num_of_days = 21
+    #cur2 = query_for_10_day_prev_symptoms(conn)
+    num_of_days = 61
     for row in cur2:
         if (row[0] in patient_ids):
             drug_index = Patient.temporal_symptoms.index("Last Drug")
@@ -237,6 +238,18 @@ def query_for_40_day_prev_symptoms(conn):
     cur2.close()
     return cur2
 
+def query_for_10_day_prev_symptoms(conn):
+    cur2 = conn.cursor()
+    print("Executing SQL query..")
+    # query to get temporal data about symptom reporting
+    # NEW RESULT CLASS
+    # - checking if patient is likely to continue reporting symptoms in the 40 days
+    # Binary result class - True (Have continued reporting symptoms) - False (Have not continued reporting symptoms)
+    cur2.execute(
+        "select a.person_id,last_symptom_date,second_last_symptom_date,days_between_last_symptoms,gender,birthdate,last_drug,number_of_symptoms from patient_last_symptom_dates a inner join person b on a.person_id=b.person_id inner join (select person_id, max(obs_datetime), value_drug AS last_drug from Obs_drugs where value_drug IS NOT NULL group by person_id) AS last_drug_table on last_drug_table.person_id=a.person_id inner join ML4H_prev_10_symptoms d on a.person_id=d.person_id")
+    print("Executed")
+    cur2.close()
+    return cur2
 
 def check_temporal_symptom_distribution(y_resampled_nm):
     sumA = 0
