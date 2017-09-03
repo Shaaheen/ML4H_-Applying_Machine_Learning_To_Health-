@@ -2,11 +2,11 @@ import datetime
 
 
 class Patient:
-    symptoms = ["Cough", "Fever", "Abdominal_pain", "skin_rash",
+    features = ["Cough", "Fever", "Abdominal_pain", "skin_rash",
                 "Lactic_acisdosis", "Lipodystrophy", "Anemia", "Anorexia",
-                "Diarrhea", "Hepatitis", "Jaundice", "Leg_pain",
-                "Night_Sweats", "Other", "Peripheral_neuropathy", "Vomiting",
-                "Weight_loss"]
+                "Diarrhea", "Leg_pain", "Night_Sweats", "Other",
+                "Peripheral_neuropathy", "Vomiting", "Weight_loss", "Sex",
+                "Age", "Last Drug", "Tot Prev Month Symptoms"]
 
     temporal_symptoms = ["Cough", "Fever", "Abdominal_pain", "skin_rash",
                 "Lactic_acisdosis", "Lipodystrophy", "Anemia", "Anorexia",
@@ -17,7 +17,7 @@ class Patient:
     sql_symptoms = ["Cough", "Fever", "Abdominal pain", "Skin rash",
                      "Lipodystrophy", "Anemia", "Anorexia", "Diarrhea",
                     "Leg pain / numbness", "Night sweats", "Peripheral neuropathy", "Vomiting",
-                    "Weight loss / Failure to thrive / malnutrition", "Other symptom"]
+                    "Weight loss / Failure to thrive / malnutrition", "Other symptom", "No symptoms"]
 
     def __init__(self, nam):
         self.nam = nam
@@ -25,7 +25,7 @@ class Patient:
         self.num_adverse_effects = 0
         self.adverse = "Not Adverse"
         self.secondary = 0
-        self.feature_symptom_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.feature_symptom_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.feature_temporal_sympt_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.cough = 0
         self.fever = 0
@@ -68,7 +68,7 @@ class Patient:
         # print(self.last_symptom + " : " + str(self.last_symptom_class))
 
     def check_if_null_features(self):
-        for i in range( len(self.symptoms) ):
+        for i in range( len(self.features) ):
             if self.feature_symptom_array[i] > 0:
                 return False
         return True

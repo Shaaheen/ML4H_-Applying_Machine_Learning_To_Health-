@@ -36,10 +36,13 @@ from sklearn import svm, datasets
 import pymysql
 from joblib import Parallel, delayed
 import multiprocessing
+
+import temporal_symptoms_ML
 from Patient import Patient
 from ml4h_file_utils import classifaction_report_csv
 variable_file = None
 def main():
+    print("Symptom prediction")
     global variable_file
     print("Connecting to ML4H DB..")
 
@@ -51,13 +54,17 @@ def main():
     print("Executing SQL query..")
     #Query to get the totals of all the symptoms that a patient has reported to the clinic
     #Used as features to predict the next possible that a patient will report
-    cur.execute("select person_id, count(*) AS Tot_Num_Sympt, sum(case when value_coded_name_id =110 then 1 else 0 end) AS Cough, sum(case when value_coded_name_id = 4315 then 1 else 0 end) AS Fever, sum(case when value_coded_name_id = 156 then 1 else 0 end) AS Abdominal_pain, sum(case when value_coded_name_id = 524 then 1 else 0 end) AS skin_rash,sum(case when value_coded_name_id=1576 then 1 else 0 end) AS Lactic_acisdosis, sum(case when value_coded_name_id=2325 then 1 else 0 end) AS Lipodystrophy,sum(case when value_coded_name_id=3 then 1 else 0 end) AS Anemia,sum(case when value_coded_name_id=888 then 1 else 0 end) AS Anorexia,sum(case when value_coded_name_id=11335 then 1 else 0 end) AS Cough_any_duration,sum(case when value_coded_name_id=17 then 1 else 0 end) AS Diarrhea,sum(case when value_coded_name_id=30 then 1 else 0 end) AS Hepatitis,sum(case when value_coded_name_id=226 then 1 else 0 end) AS Jaundice,sum(case when value_coded_name_id=10894 then 1 else 0 end) AS Leg_pain,sum(case when value_coded_name_id=4407 then 1 else 0 end) AS Night_Sweats,sum(case when value_coded_name_id=9345 then 1 else 0 end) AS Other,sum(case when value_coded_name_id=838 then 1 else 0 end) AS Peripheral_neuropathy,sum(case when value_coded_name_id=4355 then 1 else 0 end) AS Vomiting,sum(case when value_coded_name_id=11333 then 1 else 0 end) AS Weight_loss,min(obs_datetime), max(obs_datetime) from Obs_artvisit_sympt a inner join concept_name n on a.value_coded_name_id=n.concept_name_id group by person_id")
+    cur.execute("select person_id, count(*) AS Tot_Num_Sympt, sum(case when value_coded_name_id =110 then 1 else 0 end) AS Cough, sum(case when value_coded_name_id = 4315 then 1 else 0 end) AS Fever, sum(case when value_coded_name_id = 156 then 1 else 0 end) AS Abdominal_pain, sum(case when value_coded_name_id = 524 then 1 else 0 end) AS skin_rash,sum(case when value_coded_name_id=1576 then 1 else 0 end) AS Lactic_acisdosis, sum(case when value_coded_name_id=2325 then 1 else 0 end) AS Lipodystrophy,sum(case when value_coded_name_id=3 then 1 else 0 end) AS Anemia,sum(case when value_coded_name_id=888 then 1 else 0 end) AS Anorexia,sum(case when value_coded_name_id=11335 then 1 else 0 end) AS Cough_any_duration,sum(case when value_coded_name_id=17 then 1 else 0 end) AS Diarrhea,sum(case when value_coded_name_id=10894 then 1 else 0 end) AS Leg_pain,sum(case when value_coded_name_id=4407 then 1 else 0 end) AS Night_Sweats,sum(case when value_coded_name_id=9345 then 1 else 0 end) AS Other,sum(case when value_coded_name_id=838 then 1 else 0 end) AS Peripheral_neuropathy,sum(case when value_coded_name_id=4355 then 1 else 0 end) AS Vomiting,sum(case when value_coded_name_id=11333 then 1 else 0 end) AS Weight_loss,min(obs_datetime), max(obs_datetime) from Obs_artvisit_sympt a inner join concept_name n on a.value_coded_name_id=n.concept_name_id group by person_id")
     print("Executed")
     cur.close()
 
     #Loading features
     patient_ids = []
-    sum_of_features = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    #sum_of_features = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    sum_of_features = []
+    for k in range( len(Patient.features) ):
+        sum_of_features.append(0)
+
     patients = {}
     print("loading in data into program...")
     for row in cur:
@@ -67,10 +74,10 @@ def main():
         patients[row[0]].feature_symptom_array = [ int(row[2]) + int(row[10]),int(row[3]),int(row[4]),int(row[5]),int(row[6]),
                                                    int(row[7]), int(row[8]), int(row[9]), int(row[11]),
                                                    int(row[12]), int(row[13]), int(row[14]), int(row[15]),int(row[16]),
-                                                   int(row[17]), int(row[18]),int(row[19]) ]
+                                                   int(row[17]), 0, 0, 0, 0 ]
         #To check the balance of features
-        for i in range(len(sum_of_features)+1):
-            if i == 8:
+        for i in range( len(sum_of_features)-4 ):
+            if i == 8: #Exception for Cough for duration - joining with Cough feature
                 sum_of_features[0] += int(row[ i + 2])
             elif i > 8:
                 sum_of_features[i-1]+= int(row[i + 2])
@@ -89,16 +96,14 @@ def main():
         if row[2] == "None" or row[2] =='None' or row[2] is None:
             continue
         if (row[0] not in patient_ids):
-            patient_ids.append(row[0])
-            patients[row[0]] = (Patient(int(row[0])))
+            patient_ids.append( row[0] )
+            patients[row[0]] = (Patient( int(row[0])) )
         if row[2] == "Cough of any duration":
             patients[row[0]].last_symptom = "Cough"
         else:
             patients[row[0]].last_symptom = row[2]
         patients[row[0]].set_sympt_class() #Indexing - Binaryzing classes for ROC scores later on
 
-
-    conn.close()
 
     print("Loaded data")
     print()
@@ -107,14 +112,42 @@ def main():
     print("Patient objects")
     print(patients)
 
+    # Adding temporal aspect and adding more patient specific  - Sex, Age, Last Drug, num of symptoms in prev month
+    # If last reported symptom is longer than a specified number of days(eg. 30) then change result to No symptom
+    # Reason: Too long after to be helpful i.e predicting that someone will eventually report a skin rash is not as helpful
+    # as predicting a skin rash next month.
+    print("Executing temporal query...")
+    cur4 = temporal_symptoms_ML.query_for_40_day_prev_symptoms(conn)
+    for row in cur4:
+        if  (row[0] in patient_ids):
+            if int(row[3]) < 61 and patients[row[0]].last_symptom != "None"  :
+                patients[row[0]].last_symptom = "No symptoms"
+                patients[row[0]].set_sympt_class()  # Reindexing - Binaryzing classes for ROC scores later on
+            sex = 0
+            if row[4] == "M":
+                sex = 1
+            elif row[4] == "F":
+                sex = 2
+            patients[row[0]].feature_symptom_array[ Patient.features.index("Sex") ] = sex
+            patients[row[0]].feature_symptom_array[ Patient.features.index("Age") ] = int( row[5].year )
+            patients[row[0]].feature_symptom_array[ Patient.features.index("Last Drug") ] = int( row[6] )
+            patients[row[0]].feature_symptom_array[ Patient.features.index("Tot Prev Month Symptoms") ] = int( row[7] )
+
+
+    print("Executed.")
+
+    conn.close()
+
     #Load all data into array for ML application
-    ml4hX =[]
+    ml4hX = []
     ml4hY = []
     ml4hY_multiclass = []
     for id in patient_ids:
         if patients[id].check_if_null_features():
             continue
         if patients[id].last_symptom == "None":
+            continue
+        if patients[id].feature_symptom_array[ Patient.features.index("Sex") ] == 0:
             continue
         ml4hX.append( patients[id].feature_symptom_array )
         ml4hY.append(patients[id].last_symptom)
@@ -125,24 +158,45 @@ def main():
     print("Result set:")
     #print(ml4hY)
 
+    print()
+    print(len(ml4hX))
+    print(len(ml4hY))
+
+
+    # Opening significance file for writing
+    variable_file = open("symptom_variable_significance.csv",'w')
+    for symptom in Patient.features:
+        variable_file.write("," + symptom)
+    variable_file.write("\n")
+
+
     print("Orig")
     check_symptom_result_distribution(ml4hY)
     print()
-    # print("ADASYN")
-    # ada = ADASYN( random_state=40)
-    # X_resampled, y_resampled = ada.fit_sample(ml4hX, ml4hY_multiclass)
-    # check_symptom_result_distribution(y_resampled)
 
-    # print("ALLKNN")
-    # allknn = AllKNN()
-    # X_resampled_allknn, y_resampled_allknn = allknn.fit_sample(ml4hX, ml4hY)
-    # check_symptom_result_distribution(y_resampled_allknn)
+    print("ORIGINAL")
+    apply_machine_learning_techniques(ml4hX,ml4hY_multiclass, "Original")
 
-    print("NearMiss")
-    nearmiss = NearMiss(ratio=0.025)
+
+    samplers = [
+        ["NearMiss_0.025", NearMiss(ratio=0.002)],
+        [ "RandomOver_0.3",  RandomOverSampler() ],
+        ["SMOTE_0.5", SMOTE(ratio=0.5)]
+    ]
+
+    for sampler in samplers:
+        print(sampler[0])
+        X_resamp, Y_resamp = sampler[1].fit_sample(ml4hX, ml4hY_multiclass)
+        # check_symptom_result_distribution(Y_resamp)
+        # print()
+        apply_machine_learning_techniques(X_resamp, Y_resamp, sampler[0])
+        print("............")
+
+
+    nearmiss = NearMiss(ratio=0.012)
     X_resampled_nm, y_resampled_nm = nearmiss.fit_sample(ml4hX, ml4hY_multiclass)
-    check_symptom_result_distribution(y_resampled_nm)
-    print()
+    # check_symptom_result_distribution(y_resampled_nm)
+    # print()
 
     print("RandomOVer")
     randomOVer = RandomOverSampler()
@@ -150,12 +204,14 @@ def main():
     check_symptom_result_distribution(y_resampled_ranO)
     print()
 
+    print("NEAR MISS ADJUSTED OVERSAMPLE")
+    apply_machine_learning_techniques(X_resampled_ranO, y_resampled_ranO, "NM_ADJ_Over")
 
-    print("SMOTE")
-    sme = SMOTE(ratio=0.5)
-    X_res, y_res = sme.fit_sample(ml4hX, ml4hY)
-    check_symptom_result_distribution(y_res)
-    print()
+    # print("SMOTE")
+    # sme = SMOTE(ratio=0.5)
+    # X_res, y_res = sme.fit_sample(ml4hX, ml4hY)
+    # check_symptom_result_distribution(y_res)
+    # print()
 
 
     # sme = SMOTEENN(random_state=42, k = 3)
@@ -170,40 +226,16 @@ def main():
     # X_resampled_smote, y_resampled_smote = smote.fit_sample(ml4hX, ml4hY)
     # check_symptom_result_distribution(y_resampled_smote)
 
-    print()
-    print(len(ml4hX))
-    print(len(ml4hY))
-    c =0
-    for t in ml4hY:
-        if t == "None":
-            c += 1
-    print(c)
-    print()
 
-    randf = RandomForestClassifier()
-    randf.fit(ml4hX,ml4hY)
-    variable_file = open("symptom_variable_significance.csv",'w')
-    for symptom in Patient.symptoms:
-        variable_file.write("," + symptom)
-    variable_file.write("\n")
 
-    print(randf.feature_importances_)
+    # print("NEAR MISS UNDERSAMPLE 0.025")
+    # apply_machine_learning_techniques(X_resampled_nm, y_resampled_nm, "NM_Under_0.025" )
 
-    print("ORIGINAL")
-    apply_machine_learning_techniques(ml4hX,ml4hY_multiclass, "Original")
-    print("NEAR MISS UNDERSAMPLE 0.025")
-    apply_machine_learning_techniques(X_resampled_nm, y_resampled_nm, "NM_Under_0.025" )
-    print("NEAR MISS ADJUSTED OVERSAMPLE")
-    apply_machine_learning_techniques(X_resampled_ranO, y_resampled_ranO, "NM_ADJ_Over")
 
-    labels_features = ["Cough", "Fever", "Abdominal_pain", "skin_rash", "Lactic_acisdosis", "Lipodystrophy",
-                       "Anemia", "Anorexia", "Cough_any_duration", "Diarrhea", "Hepatitis", "Jaundice", "Leg_pain",
-                       "Night_Sweats",
-                       "None", "Peripheral_neuropathy", "Vomiting", "Weight_loss", "Unknown"]
 
     print("feature distribution")
     for j in range(len(sum_of_features)):
-        print(Patient.symptoms[j] + " : " + str(sum_of_features[j]))
+        print(Patient.features[j] + " : " + str(sum_of_features[j]))
 
     print()
     print("result class distribution")
@@ -211,20 +243,17 @@ def main():
     check_symptom_result_distribution(ml4hY)
     variable_file.close()
 
-    #apply_model_with_ROC(ml4hX,ml4hY_multiclass)
 
 
 def apply_machine_learning_techniques(X,Y,balance_name):
     f = open(balance_name + '_symptoms.csv', 'w')
     f.write(balance_name + "\r\n")
+    f.write( check_symptom_result_distribution(Y) )
     global classifier
     print("Applying ML Techniques...")
     validation_size1 = 0.2
     seed1 = 7
-    ml4hY_multiclass_bin = label_binarize(Y,
-                                          classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
-    # X_train1, X_validation1, Y_train1, Y_validation1 = model_selection.train_test_split(ml4hX, ml4hY, test_size=validation_size1,
-    #                                                                                 random_state=seed1)
+
     X_train1, X_validation1, Y_train1, Y_validation1 = model_selection.train_test_split(X, Y,
                                                                                         test_size=validation_size1,
                                                                                         random_state=seed1)
@@ -268,12 +297,10 @@ def apply_machine_learning_techniques(X,Y,balance_name):
 
 #Checks the balance of the resulting classes
 def check_symptom_result_distribution(Y):
-    # result_set_classes1 = ["Cough", "Fever", "Abdominal pain", "Skin rash",
-    #                        "Lactic acidosis", "Lipodystrophy", "Anemia", "Anorexia",
-    #                        "Diarrhea", "Hepatitis", "Jaundice", "Leg pain / numbness",
-    #                       "Night sweats", "Peripheral neuropathy", "Vomiting", "Weight loss / Failure to thrive / malnutrition",
-    #                        "Other symptom"]
-    sum_of_result_classes1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    string_repr = ""
+    sum_of_result_classes1 = []
+    for j in range(len(Patient.sql_symptoms)):
+        sum_of_result_classes1.append(0)
 
     for y in Y:
         if isinstance( y ,int ):
@@ -287,12 +314,19 @@ def check_symptom_result_distribution(Y):
                 sum_of_result_classes1[Patient.sql_symptoms.index(y)] += 1
 
     for result in range(len(Patient.sql_symptoms)):
+        string_repr += Patient.sql_symptoms[result] + " , " + str( sum_of_result_classes1[result] ) +"\n"
         print( Patient.sql_symptoms[result] + " : " + str( sum_of_result_classes1[result] ) )
 
+    string_repr += "\r\n"
+
+    return string_repr
 
 def apply_model_with_ROC(X,Y, model2, file,if_rand_forest):
     global classifier
-    yRoc = label_binarize(Y, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+    symptom_result_classes = []
+    for n in range( len(Patient.sql_symptoms) ):
+        symptom_result_classes.append(n)
+    yRoc = label_binarize(Y, classes=symptom_result_classes)
     # print(yRoc)
     n_classes = yRoc.shape[1]
     ml4hX_multiclass = numpy.array(X, numpy.int32)
@@ -335,7 +369,6 @@ def apply_model_with_ROC(X,Y, model2, file,if_rand_forest):
     if file is not None:
         file.write("ROC," + str(roc_auc["samples"]) + "\n")
         file.write("Avg ROC ," + str(ave/n_classes) + "\n")
-
 
 
 
