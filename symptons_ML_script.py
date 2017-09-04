@@ -125,13 +125,12 @@ def main():
     cur4 = temporal_symptoms_ML.query_for_70_day_prev_symptoms(conn)
     for row in cur4:
         if  (row[0] in patient_ids):
-            if int(row[3]) < 41 and patients[row[0]].last_symptom != "None"  :
+            if int(row[3]) < 11 and patients[row[0]].last_symptom != "None"  :
                 patients[row[0]].last_symptom = "No symptoms"
                 patients[row[0]].set_sympt_class()  # Reindexing - Binaryzing classes for ROC scores later on
             patients[row[0]].feature_symptom_array[ Patient.features.index("Age") ] = int( row[5].year )
             patients[row[0]].feature_symptom_array[ Patient.features.index("Last Drug") ] = int( row[6] )
             patients[row[0]].feature_symptom_array[ Patient.features.index("Tot Prev Month Symptoms") ] = int( row[7] )
-
 
     print("Executed.")
 
@@ -176,7 +175,7 @@ def main():
     print("ORIGINAL")
     apply_machine_learning_techniques(ml4hX,ml4hY_multiclass, "Original")
 
-
+    # Trying different samplers
     samplers = [
         ["RandomUnderSampler_0.6", RandomUnderSampler()],
         ["NearMiss_0.025", NearMiss(ratio=0.005)],
@@ -221,8 +220,9 @@ def main():
     variable_file.close()
 
 
-
-def apply_machine_learning_techniques(X,Y,balance_name):
+#Apply machine learning techniques to the sample set
+def apply_machine_learning_techniques( X, Y, balance_name):
+    # Write to file
     f = open(balance_name + '_symptoms.csv', 'w')
     f.write(balance_name + "\r\n")
     f.write( check_symptom_result_distribution(Y) )
@@ -237,6 +237,7 @@ def apply_machine_learning_techniques(X,Y,balance_name):
     seed = 7
     scoring = 'accuracy'
     # scoring = 'roc_auc'
+    # Add models to apply
     models1 = []
     models1.append(('Logistic Regression', LogisticRegression()))
     models1.append(('Linear Discriminant Analysis', LinearDiscriminantAnalysis()))
@@ -252,11 +253,12 @@ def apply_machine_learning_techniques(X,Y,balance_name):
     results1 = []
     names1 = []
     for name1, model1 in models1:
-        if name1 == 'Random Forrest':
+        if name1 == 'Random Forrest': #Get ROC value
             apply_model_with_ROC(X, Y, model1, f, True)
         else:
             apply_model_with_ROC(X, Y, model1, f, False)
 
+        #Do cross-validation for each technique
         kfold1 = model_selection.KFold(n_splits=10, random_state=seed1)
         cv_results1 = model_selection.cross_val_score(model1, X_train1, Y_train1, cv=kfold1, scoring=scoring)
         results1.append(cv_results1)
@@ -298,7 +300,8 @@ def check_symptom_result_distribution(Y):
 
     return string_repr
 
-def apply_model_with_ROC(X,Y, model2, file,if_rand_forest):
+#Apply to get ROC
+def apply_model_with_ROC( X, Y, model2, file, if_rand_forest):
     global classifier
     symptom_result_classes = []
     for n in range( len(Patient.sql_symptoms) ):
