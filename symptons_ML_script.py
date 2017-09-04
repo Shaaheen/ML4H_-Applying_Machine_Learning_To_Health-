@@ -10,7 +10,11 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline
 from imblearn.under_sampling import AllKNN
 from imblearn.under_sampling import ClusterCentroids
+from imblearn.under_sampling import CondensedNearestNeighbour
 from imblearn.under_sampling import NearMiss
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.under_sampling import RepeatedEditedNearestNeighbours
+from imblearn.under_sampling import TomekLinks
 from numpy import *
 from sklearn import model_selection
 from sklearn.ensemble import AdaBoostClassifier
@@ -60,7 +64,6 @@ def main():
 
     #Loading features
     patient_ids = []
-    #sum_of_features = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     sum_of_features = []
     for k in range( len(Patient.features) ):
         sum_of_features.append(0)
@@ -74,11 +77,11 @@ def main():
         patients[row[0]].feature_symptom_array = [ int(row[2]) + int(row[10]),int(row[3]),int(row[4]),int(row[5]),int(row[6]),
                                                    int(row[7]), int(row[8]), int(row[9]), int(row[11]),
                                                    int(row[12]), int(row[13]), int(row[14]), int(row[15]),int(row[16]),
-                                                   int(row[17]), 0, 0, 0, 0 ]
+                                                   int(row[17]), 0, 0, 0 ]
         #To check the balance of features
-        for i in range( len(sum_of_features)-4 ):
+        for i in range( len(sum_of_features)- 3 ):
             if i == 8: #Exception for Cough for duration - joining with Cough feature
-                sum_of_features[0] += int(row[ i + 2])
+                sum_of_features[0] += int(row[i + 2])
             elif i > 8:
                 sum_of_features[i-1]+= int(row[i + 2])
             else:
@@ -117,18 +120,14 @@ def main():
     # Reason: Too long after to be helpful i.e predicting that someone will eventually report a skin rash is not as helpful
     # as predicting a skin rash next month.
     print("Executing temporal query...")
-    cur4 = temporal_symptoms_ML.query_for_40_day_prev_symptoms(conn)
+    #cur4 = temporal_symptoms_ML.query_for_40_day_prev_symptoms(conn)
+    #cur4 = temporal_symptoms_ML.query_for_10_day_prev_symptoms(conn)
+    cur4 = temporal_symptoms_ML.query_for_70_day_prev_symptoms(conn)
     for row in cur4:
         if  (row[0] in patient_ids):
-            if int(row[3]) < 61 and patients[row[0]].last_symptom != "None"  :
+            if int(row[3]) < 41 and patients[row[0]].last_symptom != "None"  :
                 patients[row[0]].last_symptom = "No symptoms"
                 patients[row[0]].set_sympt_class()  # Reindexing - Binaryzing classes for ROC scores later on
-            sex = 0
-            if row[4] == "M":
-                sex = 1
-            elif row[4] == "F":
-                sex = 2
-            patients[row[0]].feature_symptom_array[ Patient.features.index("Sex") ] = sex
             patients[row[0]].feature_symptom_array[ Patient.features.index("Age") ] = int( row[5].year )
             patients[row[0]].feature_symptom_array[ Patient.features.index("Last Drug") ] = int( row[6] )
             patients[row[0]].feature_symptom_array[ Patient.features.index("Tot Prev Month Symptoms") ] = int( row[7] )
@@ -147,7 +146,7 @@ def main():
             continue
         if patients[id].last_symptom == "None":
             continue
-        if patients[id].feature_symptom_array[ Patient.features.index("Sex") ] == 0:
+        if patients[id].feature_symptom_array[ Patient.features.index("Age") ] == 0:
             continue
         ml4hX.append( patients[id].feature_symptom_array )
         ml4hY.append(patients[id].last_symptom)
@@ -179,9 +178,13 @@ def main():
 
 
     samplers = [
-        ["NearMiss_0.025", NearMiss(ratio=0.002)],
-        [ "RandomOver_0.3",  RandomOverSampler() ],
-        ["SMOTE_0.5", SMOTE(ratio=0.5)]
+        ["RandomUnderSampler_0.6", RandomUnderSampler()],
+        ["NearMiss_0.025", NearMiss(ratio=0.005)],
+        #[ "RandomOver_0.3",  RandomOverSampler() ],
+        ["CondensedNearestNeighbour0.3", CondensedNearestNeighbour(ratio=0.3)],
+        #["RepeatedEditedNearestNeighbours0.2",RepeatedEditedNearestNeighbours(ratio=0.2)],
+        #["ALLKNN_0.4",AllKNN(ratio=0.005)],
+        ["TomekLinks_0.3", TomekLinks(ratio=0.005)]
     ]
 
     for sampler in samplers:
@@ -193,7 +196,7 @@ def main():
         print("............")
 
 
-    nearmiss = NearMiss(ratio=0.012)
+    nearmiss = NearMiss(ratio=0.03)
     X_resampled_nm, y_resampled_nm = nearmiss.fit_sample(ml4hX, ml4hY_multiclass)
     # check_symptom_result_distribution(y_resampled_nm)
     # print()
@@ -206,32 +209,6 @@ def main():
 
     print("NEAR MISS ADJUSTED OVERSAMPLE")
     apply_machine_learning_techniques(X_resampled_ranO, y_resampled_ranO, "NM_ADJ_Over")
-
-    # print("SMOTE")
-    # sme = SMOTE(ratio=0.5)
-    # X_res, y_res = sme.fit_sample(ml4hX, ml4hY)
-    # check_symptom_result_distribution(y_res)
-    # print()
-
-
-    # sme = SMOTEENN(random_state=42, k = 3)
-    # X_res, y_res = sme.fit_sample(ml4hX, ml4hY)
-    # check_symptom_result_distribution(y_res)
-
-    # print("Cluster Centroids")
-    # cc = ClusterCentroids(random_state=0)
-    # X_resampled_cluster, y_resampled_cluster = cc.fit_sample(ml4hX, ml4hY)
-    # check_symptom_result_distribution(y_resampled_cluster)
-    # smote = SMOTE(kind='borderline1')
-    # X_resampled_smote, y_resampled_smote = smote.fit_sample(ml4hX, ml4hY)
-    # check_symptom_result_distribution(y_resampled_smote)
-
-
-
-    # print("NEAR MISS UNDERSAMPLE 0.025")
-    # apply_machine_learning_techniques(X_resampled_nm, y_resampled_nm, "NM_Under_0.025" )
-
-
 
     print("feature distribution")
     for j in range(len(sum_of_features)):
