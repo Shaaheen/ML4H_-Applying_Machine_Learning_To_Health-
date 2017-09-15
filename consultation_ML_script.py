@@ -96,7 +96,6 @@ def main():
 
         patients[row[0]].features[5] = get_feature_index(row[6], locations)
 
-        consultation_features.append(patients[row[0]].features)
 
     cur.close()
 
@@ -121,6 +120,20 @@ def main():
     # consultation_features_resa= numpy.array(consultation_features, numpy.int32)
 
     conn.close()
+
+    for id in patient_ids:
+        if patients[id].attended_last_consultation == True:
+            patients[id].consultations_attended -= 1
+            patients[id].features[0] -= 1
+        elif patients[id].attended_last_consultation == False:
+            patients[id].features[1] -= 1
+            patients[id].consultations_missed -= 1
+        else:
+            print("WTF")
+        consultation_features.append(patients[id].features)
+
+    print( len( consultation_results ) )
+    print( len( consultation_features ) )
 
     # DATA IS IMBALANCED
     # Trying to balance data appropriately - Using multiple sampler tools to see which is best
@@ -210,7 +223,7 @@ def apply_machine_learning_techniques(X_resamp, Y_resamp):
     scoring = 'roc_auc'
     models1 = []
     models1.append(('Logistic Regression', LogisticRegression()))
-    models1.append(('Linear Discriminant Analysis', LinearDiscriminantAnalysis()))
+    #models1.append(('Linear Discriminant Analysis', LinearDiscriminantAnalysis()))
     models1.append(('K Neighbours Classifier', KNeighborsClassifier()))
     models1.append(('Decision Tree Classifier', DecisionTreeClassifier()))
     models1.append(('Gaussian NB', GaussianNB()))
