@@ -5,8 +5,8 @@ class Patient:
     features = ["Cough", "Fever", "Abdominal_pain", "skin_rash",
                 "Lactic_acisdosis", "Lipodystrophy", "Anemia", "Anorexia",
                 "Diarrhea", "Leg_pain", "Night_Sweats", "Other",
-                "Peripheral_neuropathy", "Vomiting", "Weight_loss", "Sex",
-                "Age", "Last Drug", "Tot Prev Month Symptoms"]
+                "Peripheral_neuropathy", "Vomiting", "Weight_loss", "Age",
+                "Last Drug", "Tot Prev Month Symptoms"]
 
     temporal_symptoms = ["Cough", "Fever", "Abdominal_pain", "skin_rash",
                 "Lactic_acisdosis", "Lipodystrophy", "Anemia", "Anorexia",
@@ -53,6 +53,7 @@ class Patient:
         self.time_between_symptom_reports = None
         self.continued_symptoms = None
         self.symptoms_in_prev_month = 0
+        self.symptoms_recentness_array = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
     def __str__(self):
         return str("cough : " + str(self.cough) + " skin rash : " + str(self.rash))
