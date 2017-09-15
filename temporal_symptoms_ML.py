@@ -238,6 +238,19 @@ def query_for_40_day_prev_symptoms(conn):
     cur2.close()
     return cur2
 
+def query_for_40_day_prev_symptoms_FROM_TABLE(conn):
+    cur2 = conn.cursor()
+    print("Executing SQL query..")
+    # query to get temporal data about symptom reporting
+    # NEW RESULT CLASS
+    # - checking if patient is likely to continue reporting symptoms in the 40 days
+    # Binary result class - True (Have continued reporting symptoms) - False (Have not continued reporting symptoms)
+    cur2.execute(
+        "select * from ML4H_symptom_resultset")
+    print("Executed")
+    cur2.close()
+    return cur2
+
 def query_for_10_day_prev_symptoms(conn):
     cur2 = conn.cursor()
     print("Executing SQL query..")
