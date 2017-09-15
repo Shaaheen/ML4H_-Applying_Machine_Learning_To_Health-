@@ -1,0 +1,169 @@
+NearMiss_0.025
+Cough , 1200
+Fever , 138
+Abdominal pain , 214
+Skin rash , 1200
+Lipodystrophy , 71
+Anemia , 13
+Anorexia , 19
+Diarrhea , 78
+Leg pain / numbness , 268
+Night sweats , 6
+Peripheral neuropathy , 172
+Vomiting , 31
+Weight loss / Failure to thrive / malnutrition , 285
+Other symptom , 707
+No symptoms , 1200
+
+Cough,0.733750905875
+Fever,0.589378563582
+Abdominal pain,0.617849372125
+Skin rash,0.691842759405
+Lipodystrophy,0.637442234278
+Anemia,0.562320981024
+Anorexia,0.499820724274
+Diarrhea,0.613574332981
+Leg pain / numbness,0.557996015423
+Night sweats,0.499821364773
+Peripheral neuropathy,0.554019887567
+Vomiting,0.590192245031
+Weight loss / Failure to thrive / malnutrition,0.790538365884
+Other symptom,0.590385939076
+No symptoms,0.506175702432
+ROC,0.643532921916
+Avg ROC ,0.602340626249
+Logistic Regression,0.606339484569
+
+Cough,0.549189782023
+Fever,0.656779306377
+Abdominal pain,0.651432923039
+Skin rash,0.659666096143
+Lipodystrophy,0.977250351617
+Anemia,0.995703544576
+Anorexia,0.496773036931
+Diarrhea,0.988595220854
+Leg pain / numbness,0.593229018015
+Night sweats,0.497499106824
+Peripheral neuropathy,0.684579131237
+Vomiting,0.993189964158
+Weight loss / Failure to thrive / malnutrition,0.97335600907
+Other symptom,0.610986926505
+No symptoms,0.514987788812
+ROC,0.628410771663
+Avg ROC ,0.722881213745
+Linear Discriminant Analysis,0.544740295896
+
+Cough,0.802449815246
+Fever,0.506593607784
+Abdominal pain,0.532587343031
+Skin rash,0.898567706512
+Lipodystrophy,0.527777777778
+Anemia,0.5
+Anorexia,0.5
+Diarrhea,0.512820512821
+Leg pain / numbness,0.553514765878
+Night sweats,0.5
+Peripheral neuropathy,0.562082733034
+Vomiting,0.49982078853
+Weight loss / Failure to thrive / malnutrition,0.700418160096
+Other symptom,0.710270136772
+No symptoms,0.746684874306
+ROC,0.763082062529
+Avg ROC ,0.603572548119
+K Neighbours Classifier,0.631107321826
+
+Cough,0.811298689873
+Fever,0.697988701156
+Abdominal pain,0.710016473953
+Skin rash,0.908857336511
+Lipodystrophy,0.83098251959
+Anemia,0.561783924096
+Anorexia,0.832436954703
+Diarrhea,0.753875861045
+Leg pain / numbness,0.797346227244
+Night sweats,0.999642729546
+Peripheral neuropathy,0.700888443176
+Vomiting,0.680026067123
+Weight loss / Failure to thrive / malnutrition,0.833040743179
+Other symptom,0.835943877959
+No symptoms,0.724910823658
+ROC,0.822550619677
+Avg ROC ,0.778602624854
+Decision Tree Classifier,0.681542813395
+
+Cough,0.677277587076
+Fever,0.569066799184
+Abdominal pain,0.62047898794
+Skin rash,0.795723872905
+Lipodystrophy,0.718620655013
+Anemia,0.686962943072
+Anorexia,0.506797537947
+Diarrhea,0.876585157541
+Leg pain / numbness,0.596947769589
+Night sweats,0.999642729546
+Peripheral neuropathy,0.649540476661
+Vomiting,0.862724014337
+Weight loss / Failure to thrive / malnutrition,0.741834296443
+Other symptom,0.590522002209
+No symptoms,0.647414078691
+ROC,0.739990819605
+Avg ROC ,0.70267592721
+Gaussian NB,0.0841328945275
+
+Cough,0.829573515334
+Fever,0.597619919443
+Abdominal pain,0.655162874549
+Skin rash,0.916854379738
+Lipodystrophy,0.832067510549
+Anemia,0.624462943072
+Anorexia,0.5
+Diarrhea,0.614660502423
+Leg pain / numbness,0.702036778985
+Night sweats,0.5
+Peripheral neuropathy,0.746694821888
+Vomiting,0.726914304334
+Weight loss / Failure to thrive / malnutrition,0.841382000829
+Other symptom,0.815077624589
+No symptoms,0.743777301828
+ROC,0.816417605957
+Avg ROC ,0.709752298504
+Random Forrest,0.718585447821
+
+Cough,0.499542961609
+Fever,0.5
+Abdominal pain,0.5
+Skin rash,0.526629994606
+Lipodystrophy,0.5
+Anemia,0.5
+Anorexia,0.5
+Diarrhea,0.5
+Leg pain / numbness,0.503731343284
+Night sweats,0.5
+Peripheral neuropathy,0.5
+Vomiting,0.632600195503
+Weight loss / Failure to thrive / malnutrition,0.5
+Other symptom,0.502901346225
+No symptoms,0.5
+ROC,0.540087723772
+Avg ROC ,0.511027056082
+MLPClassifier,0.363975003977
+
+Cough,0.837238041699
+Fever,0.681320290841
+Abdominal pain,0.671456546065
+Skin rash,0.921816533985
+Lipodystrophy,0.87301084991
+Anemia,0.874641962048
+Anorexia,0.624282897096
+Diarrhea,0.62603278932
+Leg pain / numbness,0.780751753046
+Night sweats,0.499821364773
+Peripheral neuropathy,0.737897492396
+Vomiting,0.816748126426
+Weight loss / Failure to thrive / malnutrition,0.874031404677
+Other symptom,0.847225112452
+No symptoms,0.773460504318
+ROC,0.84003162136
+Avg ROC ,0.762649044603
+AdaBoostClassifier,0.37780882119
+

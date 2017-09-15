@@ -1,0 +1,169 @@
+RandomUnderSampler_0.6
+Cough , 6
+Fever , 6
+Abdominal pain , 6
+Skin rash , 6
+Lipodystrophy , 6
+Anemia , 6
+Anorexia , 6
+Diarrhea , 6
+Leg pain / numbness , 6
+Night sweats , 6
+Peripheral neuropathy , 6
+Vomiting , 6
+Weight loss / Failure to thrive / malnutrition , 6
+Other symptom , 6
+No symptoms , 6
+
+Cough,0.5
+Fever,0.5
+Abdominal pain,0.5
+Skin rash,0.71511627907
+Lipodystrophy,0.666666666667
+Anemia,0.5
+Anorexia,0.666666666667
+Diarrhea,0.488095238095
+Leg pain / numbness,0.487804878049
+Night sweats,0.5
+Peripheral neuropathy,0.488095238095
+Vomiting,1.0
+Weight loss / Failure to thrive / malnutrition,0.5
+Other symptom,0.487804878049
+No symptoms,0.977272727273
+ROC,0.548412698413
+Avg ROC ,0.598501504798
+Logistic Regression,0.389285714286
+
+Cough,0.487804878049
+Fever,0.630952380952
+Abdominal pain,0.75
+Skin rash,0.668604651163
+Lipodystrophy,0.97619047619
+Anemia,1.0
+Anorexia,1.0
+Diarrhea,0.5
+Leg pain / numbness,0.475609756098
+Night sweats,0.850609756098
+Peripheral neuropathy,0.630952380952
+Vomiting,0.988636363636
+Weight loss / Failure to thrive / malnutrition,0.951219512195
+Other symptom,0.789634146341
+No symptoms,0.488636363636
+ROC,0.740476190476
+Avg ROC ,0.745923377687
+Linear Discriminant Analysis,0.558928571429
+
+Cough,0.5
+Fever,0.5
+Abdominal pain,0.5
+Skin rash,0.46511627907
+Lipodystrophy,0.5
+Anemia,0.5
+Anorexia,0.5
+Diarrhea,0.5
+Leg pain / numbness,0.5
+Night sweats,0.5
+Peripheral neuropathy,0.5
+Vomiting,0.465909090909
+Weight loss / Failure to thrive / malnutrition,0.5
+Other symptom,0.5
+No symptoms,0.5
+ROC,0.495238095238
+Avg ROC ,0.495401691332
+K Neighbours Classifier,0.0839285714286
+
+Cough,0.600609756098
+Fever,0.464285714286
+Abdominal pain,0.475609756098
+Skin rash,0.43023255814
+Lipodystrophy,0.821428571429
+Anemia,0.988372093023
+Anorexia,0.833333333333
+Diarrhea,0.97619047619
+Leg pain / numbness,0.713414634146
+Night sweats,0.875
+Peripheral neuropathy,0.952380952381
+Vomiting,1.0
+Weight loss / Failure to thrive / malnutrition,0.838414634146
+Other symptom,0.676829268293
+No symptoms,0.965909090909
+ROC,0.749206349206
+Avg ROC ,0.774134055898
+Decision Tree Classifier,0.516071428571
+
+Cough,0.625
+Fever,0.678571428571
+Abdominal pain,0.5
+Skin rash,0.691860465116
+Lipodystrophy,0.666666666667
+Anemia,1.0
+Anorexia,0.547619047619
+Diarrhea,0.428571428571
+Leg pain / numbness,0.5
+Night sweats,0.5
+Peripheral neuropathy,0.833333333333
+Vomiting,0.977272727273
+Weight loss / Failure to thrive / malnutrition,0.75
+Other symptom,0.612804878049
+No symptoms,0.875
+ROC,0.628571428571
+Avg ROC ,0.67911333168
+Gaussian NB,0.366071428571
+
+Cough,0.625
+Fever,0.488095238095
+Abdominal pain,0.5
+Skin rash,0.441860465116
+Lipodystrophy,0.5
+Anemia,0.75
+Anorexia,0.666666666667
+Diarrhea,0.5
+Leg pain / numbness,0.487804878049
+Night sweats,0.5
+Peripheral neuropathy,0.5
+Vomiting,1.0
+Weight loss / Failure to thrive / malnutrition,0.875
+Other symptom,0.5
+No symptoms,0.488636363636
+ROC,0.571428571429
+Avg ROC ,0.588204240771
+Random Forrest,0.432142857143
+
+Cough,0.5
+Fever,0.5
+Abdominal pain,0.5
+Skin rash,0.5
+Lipodystrophy,0.5
+Anemia,0.5
+Anorexia,0.5
+Diarrhea,0.5
+Leg pain / numbness,0.5
+Night sweats,0.5
+Peripheral neuropathy,0.5
+Vomiting,0.5
+Weight loss / Failure to thrive / malnutrition,0.5
+Other symptom,0.5
+No symptoms,0.5
+ROC,0.5
+Avg ROC ,0.5
+MLPClassifier,0.0285714285714
+
+Cough,0.676829268293
+Fever,0.47619047619
+Abdominal pain,0.625
+Skin rash,0.418604651163
+Lipodystrophy,0.833333333333
+Anemia,0.988372093023
+Anorexia,0.833333333333
+Diarrhea,0.821428571429
+Leg pain / numbness,0.713414634146
+Night sweats,1.0
+Peripheral neuropathy,0.785714285714
+Vomiting,1.0
+Weight loss / Failure to thrive / malnutrition,0.838414634146
+Other symptom,0.487804878049
+No symptoms,0.977272727273
+ROC,0.742857142857
+Avg ROC ,0.76504752574
+AdaBoostClassifier,0.1375
+

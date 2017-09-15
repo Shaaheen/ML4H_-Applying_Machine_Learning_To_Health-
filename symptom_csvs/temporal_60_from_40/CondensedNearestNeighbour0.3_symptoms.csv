@@ -1,0 +1,169 @@
+CondensedNearestNeighbour0.3
+Cough , 29
+Fever , 25
+Abdominal pain , 26
+Skin rash , 35
+Lipodystrophy , 12
+Anemia , 9
+Anorexia , 11
+Diarrhea , 15
+Leg pain / numbness , 21
+Night sweats , 6
+Peripheral neuropathy , 22
+Vomiting , 13
+Weight loss / Failure to thrive / malnutrition , 15
+Other symptom , 30
+No symptoms , 63
+
+Cough,0.526710816777
+Fever,0.657112526539
+Abdominal pain,0.60757994473
+Skin rash,0.545833333333
+Lipodystrophy,0.580208333333
+Anemia,0.6
+Anorexia,0.5625
+Diarrhea,0.496815286624
+Leg pain / numbness,0.590384615385
+Night sweats,nan
+Peripheral neuropathy,0.640384615385
+Vomiting,0.545454545455
+Weight loss / Failure to thrive / malnutrition,0.607926397735
+Other symptom,0.557315233786
+No symptoms,0.535714285714
+ROC,0.569277108434
+Avg ROC ,nan
+Logistic Regression,0.426495726496
+
+Cough,0.523399558499
+Fever,0.706298655343
+Abdominal pain,0.679036715357
+Skin rash,0.57375
+Lipodystrophy,0.9875
+Anemia,0.987577639752
+Anorexia,0.549841772152
+Diarrhea,0.650743099788
+Leg pain / numbness,0.640384615385
+Night sweats,nan
+Peripheral neuropathy,0.724358974359
+Vomiting,0.892961876833
+Weight loss / Failure to thrive / malnutrition,0.928520877565
+Other symptom,0.582704876823
+No symptoms,0.528467908903
+ROC,0.665232358003
+Avg ROC ,nan
+Linear Discriminant Analysis,0.464245014245
+
+Cough,0.5
+Fever,0.496815286624
+Abdominal pain,0.5
+Skin rash,0.5
+Lipodystrophy,0.5
+Anemia,0.5
+Anorexia,0.5
+Diarrhea,0.5
+Leg pain / numbness,0.5
+Night sweats,nan
+Peripheral neuropathy,0.5
+Vomiting,0.5
+Weight loss / Failure to thrive / malnutrition,0.5
+Other symptom,0.5
+No symptoms,0.510093167702
+ROC,0.506239242685
+Avg ROC ,nan
+K Neighbours Classifier,0.0910256410256
+
+Cough,0.576821192053
+Fever,0.579263977353
+Abdominal pain,0.60757994473
+Skin rash,0.622916666667
+Lipodystrophy,0.811458333333
+Anemia,0.993788819876
+Anorexia,0.8125
+Diarrhea,0.866595895258
+Leg pain / numbness,0.677564102564
+Night sweats,nan
+Peripheral neuropathy,0.811538461538
+Vomiting,0.941642228739
+Weight loss / Failure to thrive / malnutrition,0.882519462137
+Other symptom,0.598290598291
+No symptoms,0.526915113872
+ROC,0.699655765921
+Avg ROC ,nan
+Decision Tree Classifier,0.452421652422
+
+Cough,0.601766004415
+Fever,0.489384288747
+Abdominal pain,0.56514015002
+Skin rash,0.684166666667
+Lipodystrophy,0.691666666667
+Anemia,0.696894409938
+Anorexia,0.519778481013
+Diarrhea,0.562632696391
+Leg pain / numbness,0.626282051282
+Night sweats,nan
+Peripheral neuropathy,0.525641025641
+Vomiting,0.681818181818
+Weight loss / Failure to thrive / malnutrition,0.728237791932
+Other symptom,0.500502765209
+No symptoms,0.559265010352
+ROC,0.636617900172
+Avg ROC ,nan
+Gaussian NB,0.132193732194
+
+Cough,0.486754966887
+Fever,0.493630573248
+Abdominal pain,0.578168180024
+Skin rash,0.73
+Lipodystrophy,0.74375
+Anemia,0.793788819876
+Anorexia,0.5
+Diarrhea,0.55237084218
+Leg pain / numbness,0.587179487179
+Night sweats,nan
+Peripheral neuropathy,0.683974358974
+Vomiting,0.545454545455
+Weight loss / Failure to thrive / malnutrition,0.611111111111
+Other symptom,0.52212166918
+No symptoms,0.520703933747
+ROC,0.586058519793
+Avg ROC ,nan
+Random Forrest,0.414387464387
+
+Cough,0.5
+Fever,0.5
+Abdominal pain,0.5
+Skin rash,0.5
+Lipodystrophy,0.5
+Anemia,0.5
+Anorexia,0.5
+Diarrhea,0.5
+Leg pain / numbness,0.5
+Night sweats,nan
+Peripheral neuropathy,0.5
+Vomiting,0.5
+Weight loss / Failure to thrive / malnutrition,0.5
+Other symptom,0.5
+No symptoms,0.5
+ROC,0.495266781411
+Avg ROC ,nan
+MLPClassifier,0.0531339031339
+
+Cough,0.490066225166
+Fever,0.585633404105
+Abdominal pain,0.685748124753
+Skin rash,0.557083333333
+Lipodystrophy,0.820833333333
+Anemia,0.993788819876
+Anorexia,0.5
+Diarrhea,0.539631988677
+Leg pain / numbness,0.677564102564
+Night sweats,nan
+Peripheral neuropathy,0.780769230769
+Vomiting,0.542228739003
+Weight loss / Failure to thrive / malnutrition,0.941259731069
+Other symptom,0.611362493715
+No symptoms,0.509316770186
+ROC,0.63339070568
+Avg ROC ,nan
+AdaBoostClassifier,0.200427350427
+

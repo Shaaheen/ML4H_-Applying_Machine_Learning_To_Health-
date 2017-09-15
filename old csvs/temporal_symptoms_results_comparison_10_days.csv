@@ -1,0 +1,16 @@
+,Logistic Regression,Linear Discriminant Analysis,K Neighbours Classifier,Decision Tree Classifier,Gaussian NB,Random Forrest,MLPClassifier,AdaBoostClassifier
+ALLKNN,0.647 (0.66),0.629 (0.65),0.723 (0.74),0.708 (0.71),0.673 (0.64),0.729 (0.75),0.598 (0.62),0.713 (0.74)
+NearMiss,0.642 (0.63),0.622 (0.62),0.672 (0.68),0.670 (0.66),0.592 (0.60),0.693 (0.69),0.676 (0.60),0.701 (0.71)
+TomekLinks,0.576 (0.67),0.557 (0.67),0.664 (0.71),0.626 (0.68),0.648 (0.61),0.667 (0.72),0.605 (0.61),0.674 (0.74)
+NeighbourhoodCleaningRule,0.703 (0.70),0.703 (0.69),0.768 (0.77),0.757 (0.76),0.695 (0.68),0.792 (0.79),0.517 (0.64),0.739 (0.75)
+InstanceHardnessThreshold,0.744 (0.73),0.736 (0.72),0.758 (0.76),0.765 (0.76),0.709 (0.70),0.809 (0.81),0.727 (0.63),0.772 (0.78)
+RandomUnderSampler,0.662 (0.66),0.659 (0.65),0.653 (0.66),0.685 (0.68),0.646 (0.64),0.705 (0.70),0.641 (0.59),0.682 (0.68)
+,,,,,,,,
+,,,,,,,,
+,Logistic Regression,Linear Discriminant Analysis,K Neighbours Classifier,Decision Tree Classifier,Gaussian NB,Random Forrest,MLPClassifier,AdaBoostClassifier
+ALLKNN,0.647,0.629,0.723,0.708,0.673,0.729,0.598,0.713
+NearMiss,0.642,0.622,0.672,0.67,0.592,0.693,0.676,0.701
+TomekLinks,0.576,0.557,0.664,0.626,0.648,0.667,0.605,0.674
+NeighbourhoodCleaningRule,0.703,0.703,0.768,0.757,0.695,0.792,0.517,0.739
+InstanceHardnessThreshold,0.744,0.736,0.758,0.765,0.709,0.809,0.727,0.772
+RandomUnderSampler,0.662,0.659,0.653,0.685,0.646,0.705,0.641,0.682

@@ -1,0 +1,169 @@
+CondensedNearestNeighbour0.3
+Cough , 28
+Fever , 28
+Abdominal pain , 25
+Skin rash , 33
+Lipodystrophy , 10
+Anemia , 9
+Anorexia , 11
+Diarrhea , 15
+Leg pain / numbness , 24
+Night sweats , 6
+Peripheral neuropathy , 23
+Vomiting , 14
+Weight loss / Failure to thrive / malnutrition , 16
+Other symptom , 30
+No symptoms , 66
+
+Cough,0.5170995671
+Fever,0.573779193206
+Abdominal pain,0.560173160173
+Skin rash,0.493506493506
+Lipodystrophy,0.74696969697
+Anemia,0.625
+Anorexia,0.5
+Diarrhea,0.549305555556
+Leg pain / numbness,0.532488479263
+Night sweats,nan
+Peripheral neuropathy,0.601736111111
+Vomiting,0.5
+Weight loss / Failure to thrive / malnutrition,0.496835443038
+Other symptom,0.513133640553
+No symptoms,0.550025329281
+ROC,0.540997464074
+Avg ROC ,nan
+Logistic Regression,0.385185185185
+
+Cough,0.483766233766
+Fever,0.734076433121
+Abdominal pain,0.65367965368
+Skin rash,0.55367965368
+Lipodystrophy,0.972727272727
+Anemia,0.993939393939
+Anorexia,0.556288819876
+Diarrhea,0.755902777778
+Leg pain / numbness,0.532488479263
+Night sweats,nan
+Peripheral neuropathy,0.604861111111
+Vomiting,0.948216340621
+Weight loss / Failure to thrive / malnutrition,0.98417721519
+Other symptom,0.571658986175
+No symptoms,0.521529888551
+ROC,0.651098901099
+Avg ROC ,nan
+Linear Discriminant Analysis,0.444444444444
+
+Cough,0.5
+Fever,0.5
+Abdominal pain,0.5
+Skin rash,0.5
+Lipodystrophy,0.5
+Anemia,0.5
+Anorexia,0.5
+Diarrhea,0.5
+Leg pain / numbness,0.5
+Night sweats,nan
+Peripheral neuropathy,0.5
+Vomiting,0.5
+Weight loss / Failure to thrive / malnutrition,0.5
+Other symptom,0.490322580645
+No symptoms,0.485815602837
+ROC,0.498520710059
+Avg ROC ,nan
+K Neighbours Classifier,0.1
+
+Cough,0.674891774892
+Fever,0.6733014862
+Abdominal pain,0.660173160173
+Skin rash,0.704112554113
+Lipodystrophy,0.734848484848
+Anemia,0.74696969697
+Anorexia,0.5
+Diarrhea,0.863888888889
+Leg pain / numbness,0.733870967742
+Night sweats,nan
+Peripheral neuropathy,0.798958333333
+Vomiting,0.860471806674
+Weight loss / Failure to thrive / malnutrition,0.727272727273
+Other symptom,0.600921658986
+No symptoms,0.450734549139
+ROC,0.676035502959
+Avg ROC ,nan
+Decision Tree Classifier,0.362962962963
+
+Cough,0.598917748918
+Fever,0.594214437367
+Abdominal pain,0.484632034632
+Skin rash,0.699567099567
+Lipodystrophy,0.79696969697
+Anemia,0.87196969697
+Anorexia,0.517857142857
+Diarrhea,0.573958333333
+Leg pain / numbness,0.534562211982
+Night sweats,nan
+Peripheral neuropathy,0.606944444444
+Vomiting,0.727272727273
+Weight loss / Failure to thrive / malnutrition,0.81501726122
+Other symptom,0.553456221198
+No symptoms,0.556104356636
+ROC,0.647083685545
+Avg ROC ,nan
+Gaussian NB,0.151851851852
+
+Cough,0.577272727273
+Fever,0.487261146497
+Abdominal pain,0.493506493506
+Skin rash,0.656926406926
+Lipodystrophy,0.618939393939
+Anemia,0.62196969697
+Anorexia,0.5
+Diarrhea,0.654166666667
+Leg pain / numbness,0.564976958525
+Night sweats,nan
+Peripheral neuropathy,0.703472222222
+Vomiting,0.5
+Weight loss / Failure to thrive / malnutrition,0.636363636364
+Other symptom,0.578110599078
+No symptoms,0.511144883485
+ROC,0.573541842773
+Avg ROC ,nan
+Random Forrest,0.388888888889
+
+Cough,0.5
+Fever,0.5
+Abdominal pain,0.5
+Skin rash,0.5
+Lipodystrophy,0.5
+Anemia,0.5
+Anorexia,0.5
+Diarrhea,0.546180555556
+Leg pain / numbness,0.5
+Night sweats,nan
+Peripheral neuropathy,0.5
+Vomiting,0.5
+Weight loss / Failure to thrive / malnutrition,0.5
+Other symptom,0.5
+No symptoms,0.5
+ROC,0.531487743026
+Avg ROC ,nan
+MLPClassifier,0.0888888888889
+
+Cough,0.624458874459
+Fever,0.631634819533
+Abdominal pain,0.596753246753
+Skin rash,0.680519480519
+Lipodystrophy,0.493939393939
+Anemia,0.87196969697
+Anorexia,0.496894409938
+Diarrhea,0.814583333333
+Leg pain / numbness,0.691705069124
+Night sweats,nan
+Peripheral neuropathy,0.759027777778
+Vomiting,0.860471806674
+Weight loss / Failure to thrive / malnutrition,0.675489067894
+Other symptom,0.639861751152
+No symptoms,0.478976697062
+ROC,0.649408284024
+Avg ROC ,nan
+AdaBoostClassifier,0.218518518519
+
