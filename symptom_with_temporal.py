@@ -180,8 +180,8 @@ def main():
     check_symptom_result_distribution(ml4hY)
     print()
     X_train1, X_validation1, Y_train1, Y_validation1 = model_selection.train_test_split(ml4hX, ml4hY_multiclass,
-                                                                                        test_size=0.3,
-                                                                                        random_state=7)
+                                                                                        test_size=0.37,
+                                                                                        random_state=11)
     print("Y_train")
     check_symptom_result_distribution(Y_train1)
     print("Y_Validation")
@@ -189,47 +189,12 @@ def main():
     kfold2 = model_selection.KFold(n_splits=10, random_state=7)
 
     # Trying different samplers
-    X_cha, Y_cha = NearMiss(ratio=0.025).fit_sample(X_train1, Y_train1)
+    X_cha, Y_cha = NearMiss(ratio=0.015,n_neighbors=2).fit_sample(X_train1, Y_train1)
     check_symptom_result_distribution(Y_cha)
     X_fitted_higher, Y_fitted_higher = RandomOverSampler().fit_sample(X_cha, Y_cha)
     # X_diff, Y_diff = ADASYN().fit(X_cha,Y_cha)
     # check_symptom_result_distribution(Y_diff)
     apply_machine_learning_techniques(X_fitted_higher, Y_fitted_higher, "Adjusted",X_validation1, Y_validation1)
-
-    variable_file.close()
-    samplers = [
-        # ["RandomUnderSampler_0.6", RandomUnderSampler()],
-        ["NearMiss_0.025", NearMiss(ratio=1.2)],
-        #[ "RandomOver_0.3",  RandomOverSampler() ],
-        ["CondensedNearestNeighbour0.3", CondensedNearestNeighbour(ratio=0.3)],
-        #["RepeatedEditedNearestNeighbours0.2",RepeatedEditedNearestNeighbours(ratio=0.2)],
-        #["ALLKNN_0.4",AllKNN(ratio=0.005)],
-        ["TomekLinks_0.3", TomekLinks(ratio=0.005)]
-    ]
-
-    for sampler in samplers:
-        print(sampler[0])
-        # X_resamp, Y_resamp = sampler[1].fit_sample(ml4hX, ml4hY_multiclass)
-        X_resamp, Y_resamp = sampler[1].fit_sample(X_fitted_higher, Y_fitted_higher)
-        #check_symptom_result_distribution(Y_resamp)
-        # print()
-        apply_machine_learning_techniques(X_resamp, Y_resamp, sampler[0])
-        print("............")
-
-    print("Done sampling.")
-    nearmiss = NearMiss(ratio=0.03)
-    X_resampled_nm, y_resampled_nm = nearmiss.fit_sample(ml4hX, ml4hY_multiclass)
-    # check_symptom_result_distribution(y_resampled_nm)
-    # print()
-
-    print("RandomOVer")
-    randomOVer = RandomOverSampler()
-    X_resampled_ranO, y_resampled_ranO = randomOVer.fit_sample(X_resampled_nm, y_resampled_nm)
-    check_symptom_result_distribution(y_resampled_ranO)
-    print()
-
-    print("NEAR MISS ADJUSTED OVERSAMPLE")
-    apply_machine_learning_techniques(X_resampled_ranO, y_resampled_ranO, "NM_ADJ_Over")
 
     print("feature distribution")
     for j in range(len(sum_of_features)):
@@ -245,31 +210,23 @@ def main():
 #Apply machine learning techniques to the sample set
 def apply_machine_learning_techniques( X_train1, Y_train1, balance_name, X_validation1, Y_validation1):
     # Write to file
-    f = open(balance_name + '_symptoms.csv', 'w')
+    f = open(balance_name + '_symptoms_comparison.csv', 'w')
     f.write(balance_name + "\r\n")
     f.write( check_symptom_result_distribution(Y_train1) )
     global classifier
     print("Applying ML Techniques...")
-    validation_size1 = 0.5
     seed1 = 7
-
-    # X_train1, X_validation1, Y_train1, Y_validation1 = model_selection.train_test_split(X, Y,
-    #                                                                                     test_size=validation_size1,
-    #                                                                                     random_state=seed1)
-    seed = 7
     scoring = 'accuracy'
-    # scoring = 'roc_auc'
+
     # Add models to apply
     models1 = []
     models1.append(('Logistic Regression', LogisticRegression()))
-    #models1.append(('Linear Discriminant Analysis', LinearDiscriminantAnalysis()))
     models1.append(('K Neighbours Classifier', KNeighborsClassifier()))
     models1.append(('Decision Tree Classifier', DecisionTreeClassifier()))
     models1.append(('Gaussian NB', GaussianNB()))
     models1.append(('Random Forrest', RandomForestClassifier()))
     models1.append(('MLPClassifier', MLPClassifier()))
     models1.append(('AdaBoostClassifier', AdaBoostClassifier()))
-    # models1.append(('GaussianProcessClassifier', GaussianProcessClassifier()))
     models1.append(('Support Vector Machine', SVC()))
     # evaluate each model in turn
     results1 = []
@@ -286,10 +243,14 @@ def apply_machine_learning_techniques( X_train1, Y_train1, balance_name, X_valid
         results1.append(cv_results1)
         names1.append(name1)
         msg = "%s: %f (%f)" % (name1, cv_results1.mean(), cv_results1.std())
+
+        #Fit the model with the multilabel model OneVsRest. A model is produced for each possible result set class i.e all symptoms
         model1.fit(X_train1, Y_train1)
         classifier = OneVsRestClassifier(model1)
         classifier.fit(X_train1, Y_train1)
-        print(msg)
+
+        print(msg) #Cross-val scores
+
         f.write(name1+"," + str( accuracy_score(Y_validation1, model1.predict(X_validation1)) ) + "\n")
         f.write("\r\n")
         print()
@@ -333,23 +294,19 @@ def apply_model_with_ROC( X_train, y_train, model2, file, if_rand_forest, X_test
     yRoc = label_binarize(y_train, classes=symptom_result_classes)
     y_test = label_binarize(y_test_orig, classes=symptom_result_classes)
 
-    # print(yRoc)
     n_classes = yRoc.shape[1]
     ml4hX_multiclass = numpy.array(X_train, numpy.int64)
     ml4hX_multiclass_test = numpy.array(X_test, numpy.int64)
 
-    # shuffle and split training and test sets
-    # X_train, X_test, y_train, y_test = train_test_split(ml4hX_multiclass, yRoc, test_size=0.5,
-    #                                                     random_state=0)
     # Learn to predict each class against the other
     classifier = OneVsRestClassifier(model2)
     kfold1 = model_selection.KFold(n_splits=10, random_state=8)
     cv_results1 = model_selection.cross_val_score(classifier, X_train, y_train, cv=kfold1, scoring='accuracy')
-    print("CVV: " + str(cv_results1.mean()))
+    print("CVV: " + str(cv_results1.mean())) #Cross-val accuracy score
 
-    classifier.fit(X_train, yRoc)
+    classifier.fit(X_train, yRoc) #Fit the model with the training data
 
-    y_score = classifier.predict(X_test)
+    y_score = classifier.predict(X_test) #Gets the prediction score for each produced model
 
     # Compute ROC curve and ROC area for each class
     fpr = dict()
@@ -361,11 +318,16 @@ def apply_model_with_ROC( X_train, y_train, model2, file, if_rand_forest, X_test
         variable_file.write( str(file.name) + "\n" )
     for i in range(n_classes):
         fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+
+        #Calculate roc and accuracy metrics
         roc_auc[i] = auc(fpr[i], tpr[i])
         ave+=roc_auc[i]
         accuracy_meas = accuracy_score( y_test[:, i], y_score[:, i] )
         ave_accuracy += accuracy_meas
+
         print( Patient.sql_symptoms[i] + " : " +  str(roc_auc[i]) + " , " + str(accuracy_meas) )
+
+        #Write the variable significances to file
         if file is not None:
             file.write(Patient.sql_symptoms[i] + "," + str(roc_auc[i]) + "," + str(accuracy_meas) + "\n")
         if if_rand_forest:
