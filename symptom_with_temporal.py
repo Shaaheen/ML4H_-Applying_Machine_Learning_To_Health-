@@ -1,54 +1,27 @@
 #Script to apply machine learning techniques to medical data to try predict a patient's last reported symptom to a clinic
 
-import matplotlib.pyplot as plt
 import numpy
-import pandas
-from imblearn.combine import SMOTEENN
-from imblearn.over_sampling import ADASYN
+import pymysql
 from imblearn.over_sampling import RandomOverSampler
-from imblearn.over_sampling import SMOTE
-from imblearn.pipeline import make_pipeline
-from imblearn.under_sampling import AllKNN
-from imblearn.under_sampling import ClusterCentroids
-from imblearn.under_sampling import CondensedNearestNeighbour
 from imblearn.under_sampling import NearMiss
-from imblearn.under_sampling import RandomUnderSampler
-from imblearn.under_sampling import RepeatedEditedNearestNeighbours
-from imblearn.under_sampling import TomekLinks
 from numpy import *
 from sklearn import model_selection
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import explained_variance_score
-from sklearn.metrics import r2_score
-from sklearn.model_selection import StratifiedKFold
-from sklearn.neural_network import MLPClassifier
-from sklearn.svm import LinearSVC
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
-from sklearn.preprocessing import label_binarize
-from sklearn.metrics import roc_curve, auc, roc_auc_score
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import roc_curve, auc
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn import svm, datasets
-#from numpy import np
-import pymysql
-from joblib import Parallel, delayed
-import multiprocessing
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import label_binarize
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 
 import Patient
-import temporal_symptoms_ML
 from Patient import Patient
-from ml4h_file_utils import classifaction_report_csv
+
 variable_file = None
 def main():
     print("Symptom prediction Experiment")
@@ -135,7 +108,7 @@ def main():
     print("SQL script: select * from ML4H_symptom_resultset")
     print("Retrieving patient demographic info and changing last symptom report to "
           "No symptom if last reported symptom is longer than 40 days..")
-    cur4 = temporal_symptoms_ML.query_for_40_day_prev_symptoms_FROM_TABLE(conn)
+    cur4 = query_for_40_day_prev_symptoms_FROM_TABLE(conn)
     for row in cur4:
         if  (row[0] in patient_ids):
             if int(row[3]) < 41 and patients[row[0]].last_symptom != "None"  :
@@ -349,6 +322,17 @@ def apply_model_with_ROC( X_train, y_train, model2, file, if_rand_forest, X_test
         file.write("Avg ROC ," + str(ave/n_classes) + "\n")
         file.write("Avg Pred ," + str(ave_accuracy/n_classes) + "\n")
 
-
+def query_for_40_day_prev_symptoms_FROM_TABLE(conn):
+    cur2 = conn.cursor()
+    print("Executing SQL query..")
+    # query to get temporal data about symptom reporting
+    # NEW RESULT CLASS
+    # - checking if patient is likely to continue reporting symptoms in the 40 days
+    # Binary result class - True (Have continued reporting symptoms) - False (Have not continued reporting symptoms)
+    cur2.execute(
+        "select * from ML4H_symptom_resultset")
+    print("Executed")
+    cur2.close()
+    return cur2
 
 main()

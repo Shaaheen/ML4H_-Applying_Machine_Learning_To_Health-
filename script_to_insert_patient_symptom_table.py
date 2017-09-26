@@ -1,29 +1,25 @@
-import multiprocessing
-from datetime import datetime, timedelta
-import time
+from datetime import datetime
 
 import pymysql
-from joblib import Parallel
-from joblib import delayed
 
 from Patient import Patient
 
+#PYTHON SCRIPT THAT GETS ALL THE TEMPORAL INFO ABOUT A PATIENT AND LOADS IT INTO A TABLE FOR QUICKER ACCESS
+#TEMPORAL INFO SUCH AS HOW MANY DAYS AGO WAS A SPECIFIC SYMPTOM REPORTED
 def main():
     global date
-    mydate = datetime(1943, 3, 13, 15, 10, 20)  # year, month, day
-    mydate2 = datetime(1943, 3, 17, 15, 10, 20)  # year, month, day
-
-    print(mydate2 - mydate)
 
     print("Connecting to ML4H DB..")
 
-    conn = pymysql.connect(host='nightmare.cs.uct.ac.za', port=3306, user='ochomo001', passwd='oesaerex', db='ochomo001')
+    conn = pymysql.connect(host='nightmare.cs.uct.ac.za', port=3306, user='ochomo001', passwd='oesaerex',
+                           db='ochomo001')
 
     print("Connected")
 
     cur2 = conn.cursor()
     print("Executing SQL query..")
-    cur2.execute("select person_id, second_last_symptom_date from patient_last_symptom_dates")
+    #Gets the second last data and last date info about patients
+    cur2.execute("select person_id, second_last_symptom_date, last_symptom_date from patient_last_symptom_dates")
     print("Executed")
     cur2.close()
 
@@ -35,68 +31,63 @@ def main():
         date = row[1]
         if date is None:
             continue
-        #dt = datetime.strptime(row[1], "%b %d %Y %H:%M")
-        # print(date)
         if (row[0] not in patient_ids):
             patient_ids.append(row[0])
             patients[row[0]] = (Patient(int(row[0])))
             patients[row[0]].second_latest_datetime = row[1]
+            patients[row[0]].latest_datetime = row[2]
+
 
     cur3 = conn.cursor()
     print("Executing SQL query..")
-    #cur3.execute("select a.person_id,second_last_symptom_date from Obs_artvisit_sympt a inner join patient_last_symptom_dates b on b.person_id = a.person_id where second_last_symptom_date IS NOT NULL")
-    cur3.execute("select person_id,obs_datetime from Obs_artvisit_sympt")
+    #Gets all symptom observation data
+    cur3.execute("select person_id,obs_datetime,value_coded_name_id from Obs_artvisit_sympt")
     print("Executed")
     cur3.close()
-
+    #The value_coded_name_ids of the specific symptoms accounted for in the symptom prediction problem
+    symptom_array = [110, 4315, 156, 524, 1576, 2325, 3, 888, 17, 10894, 4407, 9345, 838, 4355, 11333]
     count = 0
     for row in cur3:
         if row[0] in patient_ids:
             obs_date = row[1]
-            if obs_date > (patients[row[0]].second_latest_datetime - timedelta(days=70)) and obs_date < patients[row[0]].second_latest_datetime :
-                patients[row[0]].symptoms_in_prev_month +=1
-        count+=1
-    print(count)
+            days_between_sympts = -((obs_date - patients[row[0]].second_latest_datetime).days)
+            if row[2] is None:
+                continue
+            #If haven't reported symptom before then change to most recently reported symptom
+            if int(row[2]) in symptom_array and patients[row[0]].symptoms_recentness_array[
+                symptom_array.index(int(row[2]))] == -1 and days_between_sympts >= 0:
+                patients[row[0]].symptoms_recentness_array[symptom_array.index(int(row[2]))] = days_between_sympts
+            #If have reported before but found a more recent report then change value
+            elif int(row[2]) in symptom_array and days_between_sympts < patients[row[0]].symptoms_recentness_array[
+                symptom_array.index(int(row[2]))] and days_between_sympts >= 0:
+                patients[row[0]].symptoms_recentness_array[symptom_array.index(int(row[2]))] = days_between_sympts
+        count += 1
 
     print("Done querying.")
 
-    f = open('symptoms_in_last_month.txt', 'w')
-    count = 0
-    for patient_id in patient_ids:
-        f.write(str(patient_id) + "," + str(patients[patient_id].symptoms_in_prev_month) + "\r\n")
-        count += 1
-    f.close()
-
-    print(count)
-
+    #inserts all most recent reported symptoms into one table
     print("Inserting...")
     for j in patient_ids:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO ML4H_prev_70_symptoms (person_id, from_date, number_of_symptoms) VALUES (%s, %s, %s)",
-            (j, str( (patients[j]).second_latest_datetime ), str( (patients[j]).symptoms_in_prev_month )))
+            "INSERT INTO ML4H_most_recent_symptom_days_limit "
+            "(person_id, cough, fever, abdominal_pain, skin_rash, lactic_acidosis, lipodystrophy, anemia, "
+            "anorexia, diarrhea, leg_pain, night_sweats, other, peripheral_neuropathy, vomiting, weight_loss ) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            # (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)             )
+            (int(j) , int(patients[j].symptoms_recentness_array[0]), int(patients[j].symptoms_recentness_array[1]),
+             int(patients[j].symptoms_recentness_array[2]), int(patients[j].symptoms_recentness_array[3]),
+             int(patients[j].symptoms_recentness_array[4]), int(patients[j].symptoms_recentness_array[5]),
+             int(patients[j].symptoms_recentness_array[6]), int(patients[j].symptoms_recentness_array[7]),
+             int(patients[j].symptoms_recentness_array[8]), int(patients[j].symptoms_recentness_array[9]),
+             int(patients[j].symptoms_recentness_array[10]), int(patients[j].symptoms_recentness_array[11]),
+            int(patients[j].symptoms_recentness_array[12]), int(patients[j].symptoms_recentness_array[13]) ,
+             int(patients[j].symptoms_recentness_array[14]) ))
 
         cursor.close()
 
     conn.commit()
     print("Inserted")
     conn.close()
-
-
-def set_patients_prev_month_symptoms(row,patient_ids,patients, conn):
-    date = row[1]
-    if row[1] is None:
-        return
-    if (row[0] in patient_ids):
-        cur3 = conn.cursor()
-        cur3.execute("select count(*) from Obs_artvisit_sympt where person_id=" + str(
-            row[0]) + " AND obs_datetime>(DATE_SUB(DATE('" + str(
-            date.strftime('%Y-%m-%d %H:%M:%S')) + "'),INTERVAL 30 DAY))")
-        cur3.close()
-
-        for row3 in cur3:
-            patients[row[0]].symptoms_in_prev_month = int(row3[0])
-
-
 
 main()
