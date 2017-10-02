@@ -42,6 +42,7 @@ def main():
     print("Executing SQL query..")
     print("SQL script: select person_id,tot_consultations_attended,tot_consultations_missed, gender, age, city_village, profession, last_consultation_date, last_consultation_attendance,missed_last_appointment from ML4H_consultation_defaulter_sets")
     print("Retrieving all consultation features...")
+    #SQL Query to pull in all consultation features and results from the Dataset
     cur.execute(
         "select person_id,tot_consultations_attended,tot_consultations_missed, gender, age, city_village, profession, last_consultation_date, last_consultation_attendance,missed_last_appointment from ML4H_consultation_defaulter_sets")
     print("Executed.")
@@ -60,25 +61,27 @@ def main():
             patient_ids.append(row[0])
             patients[row[0]] = (Consultation_Patient(int(row[0])))
 
-            patients[row[0]].features[0] = int(row[1])
-            patients[row[0]].features[1] = int(row[2])
+            patients[row[0]].features[0] = int(row[1]) #Consultations Attended feature
+            patients[row[0]].features[1] = int(row[2]) #Consultations Missed features
+
+            #Patient Sex feature
             if row[3] == "M":
                 patients[row[0]].features[2] = 0
             elif row[3] == "F":
                 patients[row[0]].features[2] = 1
 
-            patients[row[0]].features[3] = int(row[4])
+            patients[row[0]].features[3] = int(row[4]) #Patient Age feature
 
-            patients[row[0]].features[5] = get_feature_index(row[5], locations)
+            patients[row[0]].features[5] = get_feature_index(row[5], locations) #Patient location feature
 
-            patients[row[0]].features[4] = get_feature_index(row[6],occupations)
+            patients[row[0]].features[4] = get_feature_index(row[6],occupations) #Patient Occupation feature
 
-            patients[row[0]].features[6] = row[7].weekday()
+            patients[row[0]].features[6] = row[7].weekday() #Next appointment day of the week feature
 
-            patients[row[0]].features[7] = int(row[8])
+            patients[row[0]].features[7] = int(row[8]) #Whether a patient attended their last appointment feature
 
-            consultation_features.append(patients[row[0]].features)
-            consultation_results.append(row[9])
+            consultation_features.append(patients[row[0]].features) #Join above together and add to feataure list
+            consultation_results.append(row[9]) #Whether patient attended their last consultation RESULT SET
 
     cur.close()
 
@@ -87,11 +90,11 @@ def main():
     print( len( consultation_results ) )
     print( len( consultation_features ) )
 
-    #Splot sets up, keep a hold out set
+    #Split training set and hold out set
     X_train1, X_validation1, Y_train1, Y_validation1 = model_selection.train_test_split(consultation_features, consultation_results,
                                                                                         test_size=0.3,
                                                                                         random_state=7)
-
+    #Find out balances of the training sets
     print("Y_train")
     check_result_distr(Y_train1)
     print("Y_val")
@@ -124,19 +127,20 @@ def main():
 
     f1.close()
 
-
+    #Write results of the original balanced dataset
     f = open('consultation_balance_comparison.csv', 'w')
     f.write("Sampler,Attended ,Missed ," + 'Logistic Regression' +", " 'K Neighbours Classifier' + "," + 'Decision Tree Classifier' + "," +  'Gaussian NB'+ "," +  'Random Forrest' + "," + 'MLPClassifier' + "," + 'AdaBoostClassifier'+ "," +  'Support Vector Machine')
     f.write("\n")
     orig_distribution = check_result_distr(Y_train1)
-    orig_results = apply_machine_learning_techniques(X_train1, Y_train1, X_validation1, Y_validation1)[0]
+    orig_results = apply_machine_learning_techniques(X_train1, Y_train1, X_validation1, Y_validation1, X_resamp_orig, Y_resamp_orig)[0]
     f.write("Orig" + "," + orig_distribution + orig_results + "\n")
 
+    #Write results of all other sampler balancing technique results
     for sampler in samplers:
         print(sampler[0])
         X_resamp, Y_resamp = sampler[1].fit_sample(X_train1, Y_train1)
         distribution = check_result_distr(Y_resamp)
-        results = apply_machine_learning_techniques(X_resamp, Y_resamp, X_validation1, Y_validation1)[0]
+        results = apply_machine_learning_techniques(X_resamp, Y_resamp, X_validation1, Y_validation1, X_resamp_orig, Y_resamp_orig)[0]
 
         f.write(sampler[0] + "," +  distribution + results + "\n")
 
@@ -164,15 +168,11 @@ def check_result_distr(Y):
     print("Missed Last Consultation : " + str(count_n))
     return (str(count_y) + ',' + str(count_n))
 
-
+# Method to apply all selected machine learning techniques to the defined training and result set
 def apply_machine_learning_techniques(X_orig, Y_orig, X_train1, Y_train1, X_validation1, Y_validation1):
     print("Applying ML Techniques...")
-    validation_size1 = 0.50
     seed1 = 7
 
-    seed = 7
-    scoring = 'accuracy'
-    scoring = 'roc_auc'
     string_roc_results = ""
     string_sensitivity_results = ""
     string_specifity_results = ""
@@ -183,6 +183,7 @@ def apply_machine_learning_techniques(X_orig, Y_orig, X_train1, Y_train1, X_vali
                                                                                         test_size=0.2,
                                                                                         random_state=7)
 
+    #Chosen Machine Learning techniques
     models1.append(('Logistic Regression', LogisticRegression()))
     models1.append(('K Neighbours Classifier', KNeighborsClassifier()))
     models1.append(('Decision Tree Classifier', DecisionTreeClassifier()))
@@ -191,11 +192,11 @@ def apply_machine_learning_techniques(X_orig, Y_orig, X_train1, Y_train1, X_vali
     models1.append(('MLPClassifier', MLPClassifier()))
     models1.append(('AdaBoostClassifier', AdaBoostClassifier()))
     models1.append(('Support Vector Machine', SVC() ))
-    # evaluate each model in turn
+    # evaluate each model
     results1 = []
     names1 = []
     for name1, model1 in models1:
-        kfold1 = model_selection.KFold(n_splits=10, random_state=seed1)
+        kfold1 = model_selection.KFold(n_splits=10, random_state=seed1) #Cross-validation
         check_result_distr(Y_train1)
         print(len(numpy.unique(Y_train1)))
         #Cross validation evaluation
@@ -206,49 +207,37 @@ def apply_machine_learning_techniques(X_orig, Y_orig, X_train1, Y_train1, X_vali
 
         names1.append(name1)
         msg = "%s: %f (%f)" % (name1, cv_results2.mean(), cv_results2.std())
-        model1.fit(X_train1, Y_train1)
+
+        model1.fit(X_train1, Y_train1) #Fit the model with the training and result set
+
         if name1 == 'Random Forrest':  # Get variable significance
-            print(model1.feature_importances_)
+            print("feature importance " + str(model1.feature_importances_))
         elif name1 == 'AdaBoostClassifier':  # Get variable significance
-            print(model1.feature_importances_)
+            print("feature importance " + str(model1.feature_importances_))
         elif name1 == 'Support Vector Machine':  # Get variable significance
             # print(model1.coef_)
             print()
         elif name1 == 'Decision Tree Classifier':  # Get variable significance
-            print(model1.feature_importances_)
-            sum_float = 0
-            for float_val in model1.feature_importances_:
-                sum_float+=float_val
-
-            for importance in model1.feature_importances_:
-                print( str( (importance/sum_float) )  )
-        elif name1 == 'Logistic Regression':  # Get variable significance
-            coefficients = (numpy.std(X_train1, 0) * model1.coef_)[0]
-            print(coefficients)
-            sum_float = 0
-            for float_val in coefficients:
-                sum_float += abs(float_val)
-
-            for importance in coefficients:
-                print(str((abs(importance) / sum_float)))
+            print("feature importance " + str(model1.feature_importances_))
 
         #Print out all metrics
         print(msg)
         print("Roc : " + str(cv_results1.mean() ))
         print("Unseen Roc : " + str(roc_auc_score(Y_validation1, model1.predict(X_validation1))))
         string_roc_results+="," + str(cv_results1.mean() )
-        print(classification_report(Y_validation1, model1.predict(X_validation1)))
+        print("Classification Report")
+        print( classification_report(Y_validation1, model1.predict(X_validation1)))
         confusion_matr = confusion_matrix(Y_validation1, model1.predict(X_validation1), labels=[True, False])
+        print("Confusion Matrix")
         print("      True   | False")
         print("True  " + str(confusion_matr[0][0]) + "  " + str(confusion_matr[0][1]))
         print("False  " + str(confusion_matr[1][0]) + "  " + str(confusion_matr[1][1]))
-        print(sensitivity_specificity_support(Y_validation1, model1.predict(X_validation1), average='macro'))
 
         #Calculate all relevant metrics
         tn, fp, fn, tp = confusion_matrix(Y_validation1, model1.predict(X_validation1)).ravel()
         specificity = int(tn.T) / (int(tn.T) + int(fp.T))
         sensitivity = int(tp.T) / (int(tp.T) + int(fn.T))
-        print(str(specificity) + " , " + str(sensitivity) )
+        print("Specifity " + str(specificity) + " , Sensitivity: " + str(sensitivity) )
         string_sensitivity_results += "," + str(sensitivity)
         string_specifity_results += "," + str(specificity)
         string_unseen_roc += "," + str(roc_auc_score(Y_validation1, model1.predict(X_validation1) ))

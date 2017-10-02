@@ -22,7 +22,8 @@ from sklearn.tree import DecisionTreeClassifier
 import Patient
 from Patient import Patient
 
-variable_file = None
+variable_file = None #File where variable significances are stored
+
 def main():
     print("Symptom prediction Experiment")
     global variable_file
@@ -138,8 +139,8 @@ def main():
         ml4hY_multiclass.append(patients[id].last_symptom_class) #Numeric verson of result set
 
     print()
-    print("Lenght of Feature array: " + str(len(ml4hX)))
-    print("Lenght of ResultSet array: "  + str(len(ml4hY)))
+    print("Length of Feature array: " + str(len(ml4hX)))
+    print("Length of ResultSet array: "  + str(len(ml4hY)))
 
 
     # Opening significance file for writing
@@ -152,23 +153,25 @@ def main():
     print("Orig")
     check_symptom_result_distribution(ml4hY)
     print()
+    #Split training and hold out set
     X_train1, X_validation1, Y_train1, Y_validation1 = model_selection.train_test_split(ml4hX, ml4hY_multiclass,
                                                                                         test_size=0.37,
                                                                                         random_state=11)
+
+    #Check the new balances of the classes
     print("Y_train")
     check_symptom_result_distribution(Y_train1)
     print("Y_Validation")
     check_symptom_result_distribution(Y_validation1)
-    kfold2 = model_selection.KFold(n_splits=10, random_state=7)
 
-    # Trying different samplers
+    # APPLYING MACHINE LEARNING TECHNIQUES WITH THE NEARMISS BALANCED DATASET (NearMiss proven to be best balanced)
     X_cha, Y_cha = NearMiss(ratio=0.015,n_neighbors=2).fit_sample(X_train1, Y_train1)
     check_symptom_result_distribution(Y_cha)
-    X_fitted_higher, Y_fitted_higher = RandomOverSampler().fit_sample(X_cha, Y_cha)
-    # X_diff, Y_diff = ADASYN().fit(X_cha,Y_cha)
-    # check_symptom_result_distribution(Y_diff)
+    X_fitted_higher, Y_fitted_higher = RandomOverSampler().fit_sample(X_cha, Y_cha) #Oversample to bring classes up
+    #Apply machine learning techniques with the balanced dataset and write results to Adjusted file
     apply_machine_learning_techniques(X_fitted_higher, Y_fitted_higher, "Adjusted",X_validation1, Y_validation1)
 
+    #Print distributions of features and result classes
     print("feature distribution")
     for j in range(len(sum_of_features)):
         print(Patient.features[j] + " : " + str(sum_of_features[j]))
@@ -201,11 +204,12 @@ def apply_machine_learning_techniques( X_train1, Y_train1, balance_name, X_valid
     models1.append(('MLPClassifier', MLPClassifier()))
     models1.append(('AdaBoostClassifier', AdaBoostClassifier()))
     models1.append(('Support Vector Machine', SVC()))
-    # evaluate each model in turn
+    # evaluate each model
     results1 = []
     names1 = []
     for name1, model1 in models1:
-        if name1 == 'Random Forrest': #Get ROC value
+        #Method retrieves the ROC value for each symptom model i.e does multilabel modelling and evaluation
+        if name1 == 'Random Forrest': #Exception as retrieving variable significances from model
             apply_model_with_ROC(X_train1, Y_train1, model1, f, True,X_validation1, Y_validation1)
         else:
             apply_model_with_ROC(X_train1, Y_train1, model1, f, False,X_validation1, Y_validation1)
@@ -258,18 +262,19 @@ def check_symptom_result_distribution(Y):
 
     return string_repr
 
-#Apply to get ROC
+#Apply to get ROC metric for all symptom models
 def apply_model_with_ROC( X_train, y_train, model2, file, if_rand_forest, X_test, y_test_orig):
     global classifier
+    #Get all symptom classes
     symptom_result_classes = []
     for n in range( len(Patient.sql_symptoms) ):
         symptom_result_classes.append(n)
+
+    #Get the result set binarized (changed to numeric values e.g. Cough=0, Fever=1, etc)
     yRoc = label_binarize(y_train, classes=symptom_result_classes)
     y_test = label_binarize(y_test_orig, classes=symptom_result_classes)
 
     n_classes = yRoc.shape[1]
-    ml4hX_multiclass = numpy.array(X_train, numpy.int64)
-    ml4hX_multiclass_test = numpy.array(X_test, numpy.int64)
 
     # Learn to predict each class against the other
     classifier = OneVsRestClassifier(model2)
@@ -279,7 +284,7 @@ def apply_model_with_ROC( X_train, y_train, model2, file, if_rand_forest, X_test
 
     classifier.fit(X_train, yRoc) #Fit the model with the training data
 
-    y_score = classifier.predict(X_test) #Gets the prediction score for each produced model
+    y_score = classifier.predict(X_test) #Gets the predictions for each produced model on the hold out set
 
     # Compute ROC curve and ROC area for each class
     fpr = dict()
@@ -294,8 +299,9 @@ def apply_model_with_ROC( X_train, y_train, model2, file, if_rand_forest, X_test
 
         #Calculate roc and accuracy metrics
         roc_auc[i] = auc(fpr[i], tpr[i])
-        ave+=roc_auc[i]
         accuracy_meas = accuracy_score( y_test[:, i], y_score[:, i] )
+        #Calculate averages over all symptom models
+        ave+=roc_auc[i]
         ave_accuracy += accuracy_meas
 
         print( Patient.sql_symptoms[i] + " : " +  str(roc_auc[i]) + " , " + str(accuracy_meas) )
@@ -313,7 +319,7 @@ def apply_model_with_ROC( X_train, y_train, model2, file, if_rand_forest, X_test
     if if_rand_forest:
         variable_file.write("\n")
 
-    # Compute micro-average ROC curve and ROC area
+    # Compute micro-average ROC curve and ROC area - WRITE AVG ROC FOR THE ML TECHNIQUE
     fpr["samples"], tpr["samples"], _ = roc_curve(y_test.ravel(), y_score.ravel())
     roc_auc["samples"] = auc(fpr["samples"], tpr["samples"])
     print("ROC: " + str(roc_auc["samples"]) + " avg : " + str(ave/n_classes))
